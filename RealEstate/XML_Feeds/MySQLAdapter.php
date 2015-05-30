@@ -1,6 +1,37 @@
-<?php
-//include 'MySQLAdapterException.php';
-class MySQLAdapter //implements DataBaseAdapterInterface
+<?php 
+/*This code has the following functions: //parameters omitted
+*	Basic SQL operations: 
+	connect();
+	query(); // primitive functions to perform any SQL query
+	insert();update();delete();select(); //CRUD using string parameters
+	quoteValue(); // Preprocessing string for SQL operation
+	fetch(); // returning row one by one aftering executing select query
+	getInsertId(); // Get the auto increment id after executing insert query
+	countRows(); // get the number of rows after executing select query
+	getAffectedRows();
+	
+	Advanced SQL operations:
+	adv_delete();adv_select();adv_update();entry_exist() // using array as parameters rather than string 
+	fetch_array(); // get an array of rows rather than getting row one by one
+	
+	Data Access Object Related Operations:
+	db_exist($object,$primary_property_name_value_pair); //check existence of the entity that reflects the object
+	db_load($object,$primary_property_name_value_pair); // load data from database to object
+	db_save($object,$primary_property_name_value_pair); // save the object data back to database, applying changes, require loading the object from db first
+	db_del($object,$primary_property_name_value_pair); // delete all related information of the object in database
+	db_create($object); // create new entries related to an object without redundancy checking
+	db_import($object, $component_keys) // create new entries related to an object with redundancy checking using a group of keys
+	get_primary_keys($class_name,$component_keys); // use a range of keys to get the primary_key value(s), returning an array
+	bulk_load($class_name,$key_property_name,$order_mode = 'desc',array $output_property_names = null,$limit = null, $offset = null); // This method can return object array of specified class with partial information from database main table in a specified order and number
+*	
+*	Note:	*
+	All other functions are part of the functions above
+	Any further functions can be added to this class to deal with more use cases
+*/
+require 'ORMMapper.php';
+require 'FileOperation.php';
+
+class MySQLAdapter 
 {
     protected $_config = array();
     protected $_link;
@@ -1198,124 +1229,4 @@ class MySQLAdapter //implements DataBaseAdapterInterface
 	//^^^自定义代码^^^=================================================================================================
 }
 
-class ORM_mapper{
-	public $map = array();
-	
-	public function __construct($json_file){
-		$json_data = $this->ExtractFileString($json_file);
-		$temp = json_decode($json_data);
-		$this->map = $temp;
-	}
-	public function save_to_file($json_file){
-		$json_string = json_encode($this->map);
-		$this->WriteToFile($json_string,$json_file);
-	}
-	public function obj_to_table($class_name){
-		if(array_key_exists($class_name,$this->map)){
-			$temp = (array)$this->map;
-			$res = explode('-',$temp[$class_name]);
-			/*
-			** $res[0] is main table name; $res[1] is primary key field name
-			*/
-			return $res;
-		}
-		return null;
-	}
-	public function property_to_field($class_name,$property_name){
-		$key=$class_name.'-'.$property_name;
-		if(array_key_exists($key,$this->map)){
-			$temp = (array)$this->map;
-			$res = explode('-',$temp[$key]);
-			/*
-			** $res[0] is table name; $res[1] is field name
-			*/
-			return $res;
-		}
-		return null;
-	}
-	public function ExtractFileString($path){
-		$fh = fopen($path, "r") or die("Unable to open file!");
-		$data = fread($fh,filesize($path));
-		fclose($fh);
-		return $data;
-	}
-	public function WriteToFile($str,$path){
-		$fh = fopen($path, "w") or die("Unable to write to file");
-		fwrite($fh,$str);
-		fclose($fh);
-	}	
-}
-class FileOperation{
-	
-	static function RecycleFile( $file_path,$recycle_bin_path){
-		
-				if(file_exists($recycle_bin_path.DIRECTORY_SEPARATOR)){
-					$newfilefullpath = $recycle_bin_path. DIRECTORY_SEPARATOR .FileOperation::GetFileName($file_path);
-					$filedata = FileOperation::ExtractFileString($file_path);
-					FileOperation::WriteToFile($filedata,$newfilefullpath);
-					unlink (  $file_path );
-				}else{
-					mkdir($recycle_bin_path.DIRECTORY_SEPARATOR,0777,true);
-					$newfilefullpath = $recycle_bin_path. DIRECTORY_SEPARATOR .FileOperation::GetFileName($file_path);
-					$filedata = FileOperation::ExtractFileString($file_path);
-					FileOperation::WriteToFile($filedata,$newfilefullpath);
-					unlink (  $file_path );
-				}
-	}
-    static function GetFiles($path,$extension = "*"){
-		$dh = opendir($path);
-		$result = array();
-		while(($file = readdir($dh))!==false){
-			$sub_path = $path . DIRECTORY_SEPARATOR . $file;
-		
-			if($file == '.' || $file == '..') { //Determine if it is empty
-			continue;
-			} else if(is_dir($sub_path)) {    //Determine if it is a folder
-				
-			} else { // Determine if it is a file
-				if($extension=="*"){
-					$result[] =  $sub_path; // Default Get all files
-				}else{
-					if($extension==FileOperation::GetExtension($sub_path)){
-						$result[] =  $sub_path;
-					}			
-				}
-			}
-		}
-		return $result;
-	}
-	static function GetFileName($fullpath){
-		$sep_pos = strrchr($fullpath,DIRECTORY_SEPARATOR);
-		return $FileName = substr($sep_pos,1,strlen($sep_pos));
-	}
-	static function GetExtension($file){
-		
-		$dot_pos = strrchr($file,".");
-		return $ext = substr($dot_pos,1,strlen($dot_pos));
-	
-	}
-	
-    static function ReadJson($json_file){
-		$json_data = FileOperation::ExtractFileString($json_file);
-		$object = json_decode($json_data);
-		return  $object;
-    }
-    
-    static function WriteJson($object,$json_file){
-        $json_string = json_encode($object);
-		FileOperation::WriteToFile($json_string,$json_file);
-    }
-    
-    static function  ExtractFileString($path){
-		$fh = fopen($path, "r") or die("Unable to open file!");
-		$data = fread($fh,filesize($path));
-		fclose($fh);
-		return $data;
-	}
-    static function WriteToFile($str,$path){
-		$fh = fopen($path, "w") or die("Unable to write to file");
-		fwrite($fh,$str);
-		fclose($fh);
-    }
-}
 ?>

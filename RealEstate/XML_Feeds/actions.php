@@ -1,23 +1,23 @@
-<?php 
-session_start();
+<?php //This code is to control the calling of php back-end functions from front-end javascript function, More packaged functions required...
+session_start(); // Enable Session...must be placed before all other codes
 
 require 'MySQLAdapter.php';
 require 'property.php';
-//echo "done";
+
+
 if(CheckPostVar('action')) {
     $action = $_POST['action'];
     switch($action) {
         case 'goto_listing_by_id' : {
 			if(CheckPostVar('pid')){
-				echo goto_listing_by_id($_POST['pid']);
+				echo goto_listing_by_id($_POST['pid']); // Return this string back to front-end
 			}
 		}
 		case 'translation_submit' : {
 			if(CheckSessionVar('request_property')&&CheckPostVar('headline')&&CheckPostVar('description')){
-				///print_r( unserialize($_SESSION['request_property']));
-				echo translation_submit(unserialize($_SESSION['request_property']),$_POST['headline'],$_POST['description']);
+				echo translation_submit(unserialize($_SESSION['request_property']),$_POST['headline'],$_POST['description']); // Return this string back to front-end
 			}else{
-				//echo "fail";
+				
 			}
 		}
 	}

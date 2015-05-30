@@ -1,3 +1,3 @@
 <?php
-	
+//This class is to manage all objects in memory/cache// Like Object Management//requiring implementation...
 ?>
