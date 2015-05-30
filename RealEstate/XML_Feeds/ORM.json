@@ -1,0 +1,58 @@
+{
+	
+	"property":"master_properties-property_id",
+	"property-property_id":"master_properties-id",
+	"property-street_no":"master_properties-street_no",
+	"property-street":"master_properties-street_name",
+	"property-town":"master_properties-town",	
+	"property-state":"master_properties-state",
+	"property-postcode":"master_properties-postcode",
+	"property-status":"master_properties-status",
+	
+	"property-inspection_dates":"inspection_date-inspection_date_id-array",
+	"property-property_imgs":"property_img-property_img_id-array",
+	"property-listing_agents":"listing_agent-listing_agent_id-array",
+	"property-property_descriptions":"property_description-property_description_id-array",
+	"property-property_pricings":"property_pricing-property_pricing_id-array",
+	"property-property_details":"property_detail-property_detail_id-array",
+	
+	"property_description":"property_description-property_description_id",
+	"property_description-property_description_id":"property_description-id",
+	"property_description-property_id":"property_description-prop_id",
+	"property_description-headline":"property_description-headline",
+	"property_description-description":"property_description-description",
+	
+	"property_pricing":"property_pricing-property_pricing_id",
+	"property_pricing-property_pricing_id":"property_pricing-id",
+	"property_pricing-property_id":"property_pricing-prop_id",
+	"property_pricing-sale_method":"property_pricing-how_sell",
+	"property_pricing-sale_price":"property_pricing-sprice1",
+	
+	"property_detail":"property_detail-property_detail_id",
+	"property_detail-property_detail_id":"property_detail-id",
+	"property_detail-property_id":"property_detail-prop_id",
+	"property_detail-type":"property_detail-prop_type",
+	"property_detail-num_bedroom":"property_detail-no_bedroom",
+	"property_detail-num_bathroom":"property_detail-no_bathroom",
+	"property_detail-num_parking":"property_detail-parking",
+	"property_detail-energy_rating":"property_detail-energy_eff",
+	
+	"inspection_date":"property_inspection-inspection_date_id",
+	"inspection_date-inspection_date_id":"property_inspection-id",
+	"inspection_date-property_id":"property_inspection-prop_id",
+	"inspection_date-value":"property_inspection-inspection_date1",
+	
+	"property_img":"property_img-property_img_id",
+	"property_img-property_img_id":"property_img-id",
+	"property_img-property_id":"property_img-prop_id",
+	"property_img-url":"property_img-prop_img",
+
+	"listing_agent":"property_contact-listing_agent_id",
+	"listing_agent-listing_agent_id":"property_contact-id",
+	"listing_agent-property_id":"property_contact-prop_id",
+	"listing_agent-first_name":"property_contact-fname1",
+	"listing_agent-last_name":"property_contact-lname1",
+	"listing_agent-telephone":"property_contact-phone1",
+	"listing_agent-email":"property_contact-email1"
+
+}

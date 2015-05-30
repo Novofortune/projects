@@ -1,0 +1,120 @@
+<propertyList date="2015-04-24-14:00:02" username="agentpoint@first2move.com.au" password="yq72{1[i=+@o">
+<rental modTime="2015-04-24-13:58:46" status="current">
+<agentID>4001</agentID>
+<uniqueID>2141089</uniqueID>
+<listingAgent id="1">
+<name>Michelle Cooke</name>
+<telephone type="BH">62533333</telephone>
+<telephone type="mobile"></telephone>
+<email>pm2@rutherfordjohnston.com</email>
+</listingAgent><listingAgent id="2">
+<name>Emily Fromholtz</name>
+<telephone type="BH">(02) 6253 3333</telephone>
+<telephone type="mobile"></telephone>
+<email>pm@rutherfordjohnston.com</email>
+</listingAgent>
+<address display="yes">
+<subNumber></subNumber>
+<streetNumber>28</streetNumber>
+<street>Daniels Street</street>
+<suburb>FRANKLIN</suburb>
+<state>ACT</state>
+<postcode>2913</postcode>
+<country>Australia</country>
+</address>
+<rent period="weekly" display="yes">520</rent>
+<priceView></priceView>
+<headline><![CDATA[Fit for a family.]]></headline>
+<description><![CDATA[This well maintained home offers spacious formal and informal living rooms as well as three huge bedrooms, a master bathroom and an ensuite.
+
+The kitchen offers a large breakfast bar as well as ample bench and cupboard space. Remaining in the family room is a large wall mounted TV.
+
+Presenting ducted gas heating throughout the house as well as ceiling fans in the living areas and bedrooms.
+
+The main bathroom includes a bath and a shower, and the large laundry comes equipped with a front load washing machine.
+
+The home also boasts a double lock up garage which has plenty of storage space.
+
+The established gardens will be looked after by a regular gardener meaning you won't have to!
+]]></description>
+<externalLink href=""/><externalLink href=""/>
+<videoLink href=""/>
+<dateAvailable>2015-04-30</dateAvailable>
+<bond></bond>
+<category name="House"/>
+<allowances>
+<petFriendly>0</petFriendly>
+<furnished>0</furnished>
+<smokers>0</smokers>
+</allowances>
+<features>
+<bedrooms>3</bedrooms>
+<bathrooms>1</bathrooms>
+<ensuite></ensuite>
+<garages>2</garages>
+<carports></carports>
+<remoteGarage></remoteGarage>
+<secureParking></secureParking>
+<airConditioning></airConditioning>
+<alarmSystem></alarmSystem>
+<vacuumSystem></vacuumSystem>
+<intercom></intercom>
+<poolInGround></poolInGround>
+<spa></spa>
+<insideSpa></insideSpa>
+<outsideSpa></outsideSpa>
+<tennisCourt></tennisCourt>
+<balcony></balcony>
+<courtyard>1</courtyard>
+<outdoorEnt></outdoorEnt>
+<shed></shed>
+<openFirePlace></openFirePlace>
+<broadband></broadband>
+<builtInRobes></builtInRobes>
+<dishwasher></dishwasher>
+<gym></gym>
+<payTV></payTV>
+<study></study>
+<workshop></workshop>
+<openSpaces></openSpaces>
+<otherFeatures>bath</otherFeatures>
+</features>
+<landDetails>
+<area unit="squareMeter"></area>
+</landDetails>
+<buildingDetails>
+<area unit="squareMeter"></area>
+</buildingDetails>
+<inspectionTimes></inspectionTimes>
+<objects>
+<img id="m" modTime="2015-04-24-13:58:12" url="http://img.agentaccount.com/318208f434d6543008c77dd738ac7b6c2bf95cbc" format="jpg"/>
+<img id="a" modTime="2015-04-24-13:58:12" url="http://img.agentaccount.com/3185ad730f142866a3a348eb733c7756b02e279d" format="jpg"/>
+<img id="b" modTime="2015-04-24-13:58:12" url="http://img.agentaccount.com/959074642075867b5109fdfbeaab88d76ecad81c" format="jpg"/>
+<img id="c" modTime="2015-04-24-13:58:12" url="http://img.agentaccount.com/d506260f757b86d590625476e3c5b77a785a2d57" format="jpg"/>
+<img id="d" modTime="2015-04-24-13:58:12" url="http://img.agentaccount.com/cfc6f92fbecc3cd33142dd1ad6a23dce5fea6f0e" format="jpg"/>
+<img id="e" modTime="2015-04-24-13:58:12" url="http://img.agentaccount.com/f2abbfdee361282389b928d9a5cbd6f6cfc3c8cc" format="jpg"/>
+<img id="f" modTime="2015-04-24-13:58:12" url="http://img.agentaccount.com/b08d501ada0613e44b4b9499eaf9dc63bbc6e5ee" format="jpg"/>
+<img id="g" modTime="2015-04-24-13:58:12" url="http://img.agentaccount.com/d305e96b20e445cdb22180b9ca8cebbd78bb40e6" format="jpg"/>
+<img id="h" modTime="2015-04-24-13:58:12" url="http://img.agentaccount.com/c40df9a4f1724b51e2dcd97ef3fa656b3c81da3f" format="jpg"/>
+<img id="i" modTime="2015-04-24-13:58:12" url="http://img.agentaccount.com/aa3a022448ec6795e6c1f6626fb123c1fffb9388" format="jpg"/>
+<img id="j"/>
+<img id="k"/>
+<img id="l"/>
+<img id="n"/>
+<img id="o"/>
+<img id="p"/>
+<img id="q"/>
+<img id="r"/>
+<img id="s"/>
+<img id="t"/>
+<img id="u"/>
+<img id="v"/>
+<img id="w"/>
+<img id="x"/>
+<img id="y"/>
+<img id="z"/>
+<floorplan id="1"/>
+<floorplan id="2"/>
+</objects>
+</rental>
+</propertyList>
