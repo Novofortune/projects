@@ -7,18 +7,22 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Threading;
 using System.IO;
+using System.Windows.Input;
 
 namespace FileManager
 {
     class Program
     {
-        public static bool running; 
+        public static bool running;
+        public static string curdir;
+        public static List<FileNode> fns;
+        public static FileTreeNode ftn;
         static void Main(string[] args)
         {
 
             //___________Testing__________
-          //  string dir = Directory.GetCurrentDirectory();
-           //List<FileNode> fns =  FileOperation.GetFileTree(dir);
+           // string dir = Directory.GetCurrentDirectory();
+          // List<FileNode> fns =  FileOperation.GetFileTree(dir);
           // for (int i = 0; i < fns.Count; i++)
           // {
           //     if (fns[i].parent != null)
@@ -30,13 +34,13 @@ namespace FileManager
 
 
 
-            string curdir = Directory.GetCurrentDirectory();
-            List<FileNode> fns = FileOperation.GetFileTree(curdir);
+             curdir = Directory.GetCurrentDirectory();
+             fns = FileOperation.GetFileTree(curdir);
 
             Form1 form = new Form1(); 
             form.FormClosed += form_FormClosed;
             form.textBox1.Text = curdir;
-            FileTreeNode ftn = FileTreeNode.LoadTreeView(fns[0]);
+            ftn = FileTreeNode.LoadTreeView(fns[0]);
             form.treeView1.Nodes.Add(ftn);
             form.Show();
             running = true;

@@ -16,6 +16,7 @@ namespace FileManager
         {
             FileTreeNode treeNode = new FileTreeNode();
             treeNode.Text = fn.name;
+            //Console.WriteLine(fn.name);
             treeNode.fileNode = fn;
             if (fn.children != null)
             {
@@ -49,24 +50,29 @@ namespace FileManager
         }
         private static FileNode GetFileTreeLoop(string path) {
             FileNode node = new FileNode();
-            DirectoryInfo dir = new DirectoryInfo(path);
-            node.xpath = dir.FullName;
-            node.isdir = dir.Attributes.HasFlag(FileAttributes.Directory); // Check if the path is a directory
-            node.name = dir.Name;
-            node.extension = dir.Extension;
+            DirectoryInfo dir = new DirectoryInfo(path); 
+            Console.WriteLine(dir.Name);
 
-            if (node.isdir) 
-            {
-                node.children = new List<FileNode>();
-                FileSystemInfo[] fsi = dir.GetFileSystemInfos();
-                for (int i = 0; i < fsi.Length; i++)
+           
+                node.xpath = dir.FullName;
+                node.isdir = dir.Attributes.HasFlag(FileAttributes.Directory); // Check if the path is a directory
+                node.name = dir.Name;
+                node.extension = dir.Extension;
+
+                if (node.isdir)
                 {
-                    FileNode childNode = GetFileTreeLoop(fsi[i].FullName);
-                    node.children.Add(childNode);
-                    childNode.parent = node;
+                    if (dir.Exists)
+                    {
+                        node.children = new List<FileNode>();
+                        FileSystemInfo[] fsi = dir.GetFileSystemInfos();
+                        for (int i = 0; i < fsi.Length; i++)
+                        {
+                            FileNode childNode = GetFileTreeLoop(fsi[i].FullName);
+                            node.children.Add(childNode);
+                            childNode.parent = node;
+                        }
+                    }
                 }
-            }
-                
 
             return node;
         }
