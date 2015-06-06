@@ -44,7 +44,6 @@ namespace FileManager
                 for(int i = 0;i<fn.children.Count;i++){
                     FileTreeNode childTreeNode = LoadTreeView(fn.children[i]);
                     treeNode.Nodes.Add(childTreeNode);
-                    
                 }
                 
             }
