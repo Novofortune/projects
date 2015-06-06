@@ -37,12 +37,13 @@ namespace FileManager
              curdir = Directory.GetCurrentDirectory();
              fns = FileOperation.GetFileTree(curdir);
 
-            Form1 form = new Form1(); 
+            Form1 form = new Form1();
             form.FormClosed += form_FormClosed;
             form.textBox1.Text = curdir;
             ftn = FileTreeNode.LoadTreeView(fns[0]);
             form.treeView1.Nodes.Add(ftn);
             form.Show();
+
             running = true;
             while (running)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
@@ -9,9 +10,29 @@ using System.Windows.Forms;
 
 namespace FileManager
 {
+    
     public class FileTreeNode:TreeNode
     {
         public FileNode fileNode;
+        public static FileTreeNode Filter(FileTreeNode ftn, ConditionalExpression condition) {
+            FileTreeNode treeNode = null;
+            if (condition.Equals(true)) // Check the condition and give value to the node...
+            {
+                treeNode = ftn;
+                if (ftn.Nodes != null)
+                {
+                    for (int i = 0; i < ftn.Nodes.Count; i++)
+                    {
+                        FileTreeNode childTreeNode = Filter(ftn.Nodes[i] as FileTreeNode,condition);
+                        if (childTreeNode != null) // Check if it is null
+                        {
+                            treeNode.Nodes.Add(childTreeNode);
+                        }
+                    }
+                }
+            }
+            return treeNode;
+        }
         public static FileTreeNode LoadTreeView(FileNode fn)
         {
             FileTreeNode treeNode = new FileTreeNode();
@@ -20,7 +41,7 @@ namespace FileManager
             treeNode.fileNode = fn;
             if (fn.children != null)
             {
-                for(int  i = 0;i<fn.children.Count;i++){
+                for(int i = 0;i<fn.children.Count;i++){
                     FileTreeNode childTreeNode = LoadTreeView(fn.children[i]);
                     treeNode.Nodes.Add(childTreeNode);
                     
