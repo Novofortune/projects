@@ -8,23 +8,21 @@ using System.Windows.Forms;
 using System.Threading;
 using System.IO;
 using System.Windows.Input;
+using ScriptMaster;
 
 namespace FileManager
 {
     class Program
     {
         public static bool running;
-
+        //public static string cmd;
+        [STAThread]
         static void Main(string[] args)
         {
-            Form1 form = new Form1();
-            form.FormClosed += form_FormClosed;
-            form.curdir = Directory.GetCurrentDirectory();
-            form.fns = FileOperation.GetFileTree(form.curdir);
+            FileExplorerForm form = new FileExplorerForm();
 
-            form.textBox1.Text = form.curdir;
-            form.ftn = FileTreeNode.LoadTreeView(form.fns[0]);
-            form.treeView1.Nodes.Add(form.ftn);
+            form.textBox1.Text = Directory.GetCurrentDirectory();
+            form.loadTreeView();
             form.Show();
 
             running = true;
@@ -32,12 +30,13 @@ namespace FileManager
             {
                 Application.DoEvents();
                 Thread.Sleep(20);
+
+                ProgramExitCheck();
             }
         }
-
-        static void form_FormClosed(object sender, FormClosedEventArgs e)
+        static void ProgramExitCheck()
         {
-            running = false;
+            if (Application.OpenForms.Count == 0) { running = false; };
         }
     }
 }
