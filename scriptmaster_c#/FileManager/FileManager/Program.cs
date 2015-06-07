@@ -22,7 +22,7 @@ namespace FileManager
             FileExplorerForm form = new FileExplorerForm();
 
             form.textBox1.Text = Directory.GetCurrentDirectory();
-            form.loadTreeView();
+            form.firstloadTreeView();
             form.Show();
 
             running = true;

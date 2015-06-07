@@ -14,45 +14,60 @@ namespace FileManager
     public class FileTreeNode:TreeNode
     {
         public FileNode fileNode;
+        public static FileNode GetFilesByExtension(FileNode fn, string extension)
+        {
+            if (extension != "dir"&&extension!="")
+            {
+                FileNode root = new FileNode();
+                root.isdir = true;
+                root.extension = "";
+                root.xpath = "";
+                root.name = extension + " files";
+                root.children = new List<FileNode>();
+                GetFilesByExtensionLoop(fn, extension, ref root);
+                return root;
+            }
+            else
+            {
+               return  ExtensionFilter( fn, extension);
+            }
+        }
+        private static void GetFilesByExtensionLoop(FileNode fn, string extension,ref FileNode root)
+        {
+            if ((extension==""||fn.extension == extension) && !fn.isdir)
+            {
+                FileNode newfn = FileNode.CloneNoRelation(fn);
+                root.children.Add(newfn);
+                newfn.parent = root;
+            }
+            if (fn.children != null)
+            {
+                foreach (FileNode child in fn.children)
+                {
+                    GetFilesByExtensionLoop(child, extension, ref root);
+                }
+            }
+            
+        }
         public static FileNode ExtensionFilter(FileNode fn, string extension)
         {
-            FileNode newfn = new FileNode();
-            newfn.isdir = fn.isdir;
-            newfn.extension = fn.extension;
-            newfn.xpath = fn.xpath;
-            newfn.name = fn.name;
-            newfn.children = new List<FileNode>();
-            foreach (FileNode child in fn.children)
+            if (extension != "")
             {
-                if (child.extension == extension || child.isdir) { 
-                FileNode newchild = FileNode.Clone(child);
-                newfn.children.Add(newchild);
-                newchild.parent = newfn;
-                    }
-            }
-            return newfn;
-        }
-        public static FileNode ExtensionFilter(List<FileNode> fns,string extension)
-        {
-
-            FileNode newfn = fns[0];
-            if (extension != "*")
-            {
-                for (int i = 0; i < fns.Count; i++)
+                FileNode newfn = new FileNode();
+                newfn.isdir = fn.isdir;
+                newfn.extension = fn.extension;
+                newfn.xpath = fn.xpath;
+                newfn.name = fn.name;
+                newfn.children = new List<FileNode>();
+                if (fn.children != null)
                 {
-                    if (fns[i].isdir) // if the filenode is dir
+                    foreach (FileNode child in fn.children)
                     {
-
-                    }
-                    else // If the filenode is a file
-                    {
-                        if (fns[i].extension==extension)
+                        if (child.extension == extension || child.isdir)
                         {
-
-                        }
-                        else
-                        {
-                            fns[i].parent.children.Remove(fns[i]);
+                            FileNode newchild = FileTreeNode.ExtensionFilter(child, extension);
+                            newfn.children.Add(newchild);
+                            newchild.parent = newfn;
                         }
                     }
                 }
@@ -60,10 +75,10 @@ namespace FileManager
             }
             else
             {
-                return fns[0];
+                return fn;
             }
-
         }
+      
         public static FileTreeNode Filter(FileTreeNode ftn, ConditionalExpression condition) {
             FileTreeNode treeNode = null;
             if (condition.Equals(true)) // Check the condition and give value to the node...
@@ -114,7 +129,7 @@ namespace FileManager
             return treeNode;
         }
     }
-
+    [Serializable]
     public class FileNode{
         public FileNode parent;
         public List<FileNode> children;
@@ -178,12 +193,25 @@ namespace FileManager
             newfn.xpath = fn.xpath;
             newfn.name = fn.name;
             newfn.children = new List<FileNode>();
-            foreach (FileNode child in fn.children)
+            if (fn.children != null)
             {
-                FileNode newchild = FileNode.Clone(child);
-                newfn.children.Add(newchild);
-                newchild.parent = newfn;
+                for (int i = 0; i < fn.children.Count; i++)
+                {
+                    FileNode newchild = FileNode.Clone(fn.children[i]);
+                    newfn.children.Add(newchild);
+                    newchild.parent = newfn;
+                }
             }
+            return newfn;
+        }
+        public static FileNode CloneNoRelation(FileNode fn)
+        {
+            FileNode newfn = new FileNode();
+            newfn.isdir = fn.isdir;
+            newfn.extension = fn.extension;
+            newfn.xpath = fn.xpath;
+            newfn.name = fn.name;
+            newfn.children = new List<FileNode>();
             return newfn;
         }
         public static void ToList(FileNode fn, ref List<FileNode> fns)
