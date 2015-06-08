@@ -32,10 +32,17 @@ namespace FileManager
             List<ASTNode> nodes = scanner.ScanAll(); // With Sorted Order
 
            Console.WriteLine( nodes.Count);
+<<<<<<< HEAD
             foreach(ASTNode node in nodes){
                 Console.WriteLine(node.Offset);
             }
 
+=======
+           foreach (ASTNode node in nodes)
+           {
+               Console.WriteLine(node.type+":"+node.Content);
+           }
+>>>>>>> origin/master
             FileExplorerForm form = new FileExplorerForm();
 
             form.textBox1.Text = Directory.GetCurrentDirectory();
