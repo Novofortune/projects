@@ -32,7 +32,10 @@ namespace FileManager
             List<ASTNode> nodes = scanner.ScanAll();
 
            Console.WriteLine( nodes.Count);
-
+           foreach (ASTNode node in nodes)
+           {
+               Console.WriteLine(node.type+":"+node.Content);
+           }
             FileExplorerForm form = new FileExplorerForm();
 
             form.textBox1.Text = Directory.GetCurrentDirectory();
