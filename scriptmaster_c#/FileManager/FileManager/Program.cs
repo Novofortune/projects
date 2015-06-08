@@ -19,6 +19,20 @@ namespace FileManager
         [STAThread]
         static void Main(string[] args)
         {
+            //testing
+            Dictionary<string, string> patterns = new Dictionary<string, string>();
+            patterns.Add("indentifier", "[A-Z|a-z|_][A-Z|a-z|0-9|_]*");
+            patterns.Add("openingbracket1", "{");
+            patterns.Add("closingbracket1", "}");
+            patterns.Add("quote1", "[\"]");
+            patterns.Add("quote2", "[\']");
+            patterns.Add("colon", ":");
+            patterns.Add("comma", ",");
+            Scanner scanner = new Scanner(patterns, "{\"abc\":{ \'aas\':\'cd\',\'a\':\'c\'} }");
+            List<ASTNode> nodes = scanner.ScanAll();
+
+           Console.WriteLine( nodes.Count);
+
             FileExplorerForm form = new FileExplorerForm();
 
             form.textBox1.Text = Directory.GetCurrentDirectory();

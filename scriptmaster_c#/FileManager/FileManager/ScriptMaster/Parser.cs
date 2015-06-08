@@ -9,135 +9,295 @@ using System.Text.RegularExpressions;
 
 namespace ScriptMaster
 {
-    public abstract class Parser1
+
+
+    public class JsonParser:Parser
     {
-        public Dictionary<string, string> brackets { get; set; }
-        public List<string> separators { get; set; }
-        public List<BlockNode> BlockNodes { get; set; }
-        public Parser1()
-        {
-            brackets = new Dictionary<string, string>();
-            separators = new List<string>();
-            BlockNodes = new List<BlockNode>();
-        }
-        public virtual void Parse(string source, ref CodeTreeView outputTree)
-        {
-
-        }
-        public void AddBracketRule(string start,string end)
-        {
-            if (!brackets.ContainsKey(start)) { brackets.Add(start, end); }
-        }
-        public void AddSeparatorRule(string separator)
-        {
-            if (!separators.Contains(separator)) { separators.Add(separator); }
-        }
-
-        //public void FindBlock(BlockNode node, string RestNodeContetnt, int depth = 0)//This Method Divides the string into three parts: PreOrder, InOrder, PostOrder
-        //{
-        //    this.BlockNodes.Add(node);
-        //    node.Depth = 0;
-        //    string source = node.Content;
-        //    int SourceOffset = node.Offset;
-
-        //    int min = source.Length - 1;
-        //    List<Match> results = new List<Match>();
-        //    BlockNode substrings = new BlockNode();
-        //    for (int i = 0; i < brackets.Count; i++)
-        //    {
-        //        Match match = RegexMatch(source, brackets.ElementAt(i).Key);
-        //        if (match.Index < min)
-        //        {
-        //            min = match.Index;
-        //            results.Add(match);
-        //        }
-        //    }
-        //    if (results.Count > 0)
-        //    {
-        //        Match FirstMatch = results[results.Count - 1];
-
-        //        string prev = "";
-        //        string next = "";
-        //        if (FirstMatch.Captures.Count != 0) // If there is the start match
-        //        {
-        //            next = source.Substring(FirstMatch.Index + 1);
-        //            prev = source.Substring(0, FirstMatch.Index);
-        //            if (brackets.ContainsKey(FirstMatch.Value))
-        //            {
-        //                Match LastMatch = RegexMatch(next, brackets[FirstMatch.Value]);
-        //                if (LastMatch.Captures.Count != 0) //If there is the end match
-        //                {
-        //                    BlockNode child0 = new BlockNode();
-        //                    child0.Offset = SourceOffset;
-        //                    child0.Content = prev;
-        //                    BlockNode child1 = new BlockNode();
-        //                    child1.Offset = SourceOffset + FirstMatch.Index + FirstMatch.Length;
-        //                    child1.Content = next.Substring(0, LastMatch.Index);
-        //                    //BlockNode sibling = new BlockNode();
-        //                    //sibling.Offset = SourceOffset + FirstMatch.Index + LastMatch.Index + FirstMatch.Length + LastMatch.Length;
-        //                    RestContent = next.Substring(LastMatch.Index + 1);
-
-        //                    if (child0.Content != "")
-        //                    {
-        //                        node.Children.Add(child0);
-        //                        FindBlock(child0, RestNodeContetnt, depth);
-        //                    }
-        //                    if (child1.Content != "")
-        //                    {
-        //                        node.Children.Add(child1);
-        //                        FindBlock(child1,RestNodeContetnt, depth);
-
-        //                    }
-        //                    if (child2.Content != "")
-        //                    {
-        //                        node.Children.Add(child2);
-        //                        FindBlock(child2,RestNodeContetnt, depth);
-        //                    }
-        //                }
-        //                else { }
-        //            }
-        //            else { }
-        //        }
-        //        else { }
-        //    }
-        //    else { }
-        //}
         
-
-        public static MatchCollection RegexMatches(string source,string pattern,bool if_reverse=false)
+        public ASTNode parse(string data,VocabularyNode spelling,GrammarNode rule)
         {
-            //RegexOptions opt = new RegexOptions();
-            System.Text.RegularExpressions.Regex regex = new Regex(pattern);
-          
-            MatchCollection mc = regex.Matches(source);
-            return mc;
+            
+            ASTNode gn = new ASTNode();
+            this.root = gn;
+            this.curpos = 0;
+            while (this.curpos < data.Length)
+            {
+                //LoopScan(data, spelling);
+                LoopParse(gn,data,rule);
+            }
+            return gn;
         }
-        public static Match RegexMatch(string source, string pattern)
+        
+       
+        private void LoopParse(ASTNode gn,string data,GrammarNode rule)
         {
-            System.Text.RegularExpressions.Regex regex = new Regex(pattern);
-            Match m = regex.Match(source);
-            return m;
+            //if(data[this.curpos]
+            this.curpos++;
         }
     }
 
-    public class BlockNode
+
+
+    public class MyScanner
+    {
+        public Parser parser { get; set; }
+        public VocabularyNode spelling { get; set; }
+        public int curpos { get; set; }
+        public string data { get; set; }
+        public string state { get; set; }
+        public ASTNode CurrentASTNode { get; set; }
+        public StringBuilder ASTNodeBuilder { get; set; }
+        public MyScanner(VocabularyNode spelling,string data)
+        {
+            reset(spelling, data);
+        }
+        public void reset(){
+            this.curpos = 0;
+            this.state = "off";
+            this.ASTNodeBuilder = new StringBuilder();
+            this.CurrentASTNode = new ASTNode();
+        }
+        public void reset(VocabularyNode spelling,string data){
+            
+            this.spelling = spelling;
+            this.data = data;
+            
+            reset();
+        }
+        public ASTNode Scan()
+        {
+                return LoopScan(data,spelling);
+        }
+        private ASTNode LoopScan(string data, VocabularyNode spelling)
+        {
+            if (this.curpos >= data.Length) { return null; }
+            if (spelling.childNodes.ContainsKey('.')) // Match all
+            {
+                #region '.'
+                if (this.state == "on") // Continuing
+                {
+                    this.ASTNodeBuilder.Append(data[this.curpos]);
+                    if (spelling.childNodes['.'].childNodes.Count == 0) // Check success
+                    {
+                        this.CurrentASTNode = new ASTNode();
+                        this.CurrentASTNode.Offset = this.curpos - this.ASTNodeBuilder.Length + 1;
+                        this.CurrentASTNode.Content = this.ASTNodeBuilder.ToString();
+                        this.CurrentASTNode.type = "token";
+                        this.ASTNodeBuilder.Clear();
+                        this.state = "off";
+                        this.curpos++;
+                        return this.CurrentASTNode;
+                    }
+                    this.curpos++;
+                    return LoopScan(data, spelling.childNodes['.']);
+                }
+                else if (this.state == "off") // Starting 
+                {
+                    this.state = "on";
+                    this.ASTNodeBuilder.Clear(); //refresh the ASTNode builder
+                    this.ASTNodeBuilder.Append(data[this.curpos]);
+                    if (spelling.childNodes['.'].childNodes.Count == 0) // Check success
+                    {
+                        this.CurrentASTNode = new ASTNode();
+                        this.CurrentASTNode.Offset = this.curpos - this.ASTNodeBuilder.Length + 1;
+                        this.CurrentASTNode.Content = this.ASTNodeBuilder.ToString();
+                        this.CurrentASTNode.type = "token";
+                        this.ASTNodeBuilder.Clear();
+                        this.state = "off";
+                        this.curpos++;
+                        return this.CurrentASTNode;
+                    }
+                    this.curpos++;
+                    return LoopScan(data, spelling.childNodes['.']);
+                }
+                else { return null; }
+                #endregion
+            }
+            else if(spelling.childNodes.ContainsKey('+'))// Repeat the last until the next match appear 
+            {
+                return LoopScan(data, spelling.childNodes['+']);
+            }
+                else if (spelling.childNodes.ContainsKey(data[this.curpos])) // Precise Matching
+                {
+                    if (this.state == "on") // Continuing
+                    {
+                        this.ASTNodeBuilder.Append(data[this.curpos]);
+                        if (spelling.childNodes[data[this.curpos]].childNodes.Count == 0) // Check success
+                        {
+                            this.CurrentASTNode = new ASTNode();
+                            this.CurrentASTNode.Offset = this.curpos - this.ASTNodeBuilder.Length+1;
+                            this.CurrentASTNode.Content = this.ASTNodeBuilder.ToString();
+                            this.CurrentASTNode.type = "token";
+                            this.ASTNodeBuilder.Clear();
+                            this.state = "off";
+                            this.curpos++;
+                            return this.CurrentASTNode;
+                        }
+                        this.curpos++;
+                        return LoopScan(data, spelling.childNodes[data[this.curpos - 1]]);
+                    }
+                    else if (this.state == "off") // Starting 
+                    {
+                        this.state = "on";
+                        this.ASTNodeBuilder.Clear(); //refresh the ASTNode builder
+                        this.ASTNodeBuilder.Append(data[this.curpos]);
+                        if (spelling.childNodes[data[this.curpos]].childNodes.Count == 0) // Check success
+                        {
+                            this.CurrentASTNode = new ASTNode();
+                            this.CurrentASTNode.Offset = this.curpos - this.ASTNodeBuilder.Length+1;
+                            this.CurrentASTNode.Content = this.ASTNodeBuilder.ToString();
+                            this.CurrentASTNode.type = "token";
+                            this.ASTNodeBuilder.Clear();
+                            this.state = "off";
+                            this.curpos++;
+                            return this.CurrentASTNode;
+                        }
+                        this.curpos++;
+                        return LoopScan(data, spelling.childNodes[data[this.curpos - 1]]);
+                    }
+                    else { return null; }
+                }
+                else // This means the Vocabulary match fails
+                {
+                    if (this.state == "on")
+                    {
+                        if (spelling.parentNode != null)
+                        {
+                            if (spelling.parentNode.childNodes.ContainsKey('+')) // if it fails, then check if the parentNode has '*' rule, if so, run a second check
+                            {
+                                return LoopScan(data, spelling.parentNode.parentNode);
+                            }
+                            else
+                            {
+                                this.state = "off";
+                                this.ASTNodeBuilder.Clear();
+                                this.curpos++;
+                                return LoopScan(data, this.spelling);
+                            }
+                        }
+                        else
+                        {
+                            this.state = "off";
+                            this.ASTNodeBuilder.Clear();
+                            this.curpos++;
+                            return LoopScan(data, this.spelling);
+                        }
+                    }
+                    else if (this.state == "off")
+                    {
+                        this.curpos++;
+                        return LoopScan(data, this.spelling);
+                    }
+                    else { return null; }
+                }
+            }
+        
+    }
+    public class Scanner
+    {
+        public Parser parser { get; set; }
+        public Dictionary<string,string> patterns { get; set; }
+        public int curpos { get; set; }
+        public string data { get; set; }
+        public string state { get; set; }
+        public ASTNode CurrentASTNode { get; set; }
+        public StringBuilder ASTNodeBuilder { get; set; }
+        public Scanner(Dictionary<string,string> patterns, string data)
+        {
+            reset(patterns, data);
+        }
+        public void reset(){
+            this.curpos = 0;
+            this.state = "off";
+            this.ASTNodeBuilder = new StringBuilder();
+            this.CurrentASTNode = new ASTNode();
+        }
+        public void reset(Dictionary<string,string> patterns, string data)
+        {
+
+            this.patterns = patterns;
+            this.data = data;
+            
+            reset();
+        }
+        public List<ASTNode> ScanAll()
+        {
+            List<ASTNode> nodes = new List<ASTNode>();
+            Dictionary<string,MatchCollection> mcs = new Dictionary<string,MatchCollection>();
+            foreach (KeyValuePair<string,string> pattern in this.patterns)
+            {
+                MatchCollection tokens = Regex.Matches(data, pattern.Value, RegexOptions.Singleline);
+                mcs.Add(pattern.Key,tokens);
+            }
+            foreach (KeyValuePair<string,MatchCollection> mc in mcs)
+            {
+                foreach (Match m in mc.Value)
+                {
+                    ASTNode node = new ASTNode();
+                    node.Content = m.Value;
+                    node.type = mc.Key;
+                    node.Offset= m.Index;
+                    nodes.Add(node);
+                }
+            }
+            return nodes;
+        }
+    }
+    public class Parser
+    {
+        public GrammarNode rule { get; set; }
+        public int curpos { get; set; }
+        public ASTNode root { get; set; }
+       
+    }
+
+    public class VocabularyNode
+    {
+        public VocabularyNode parentNode { get; set; }
+        public Dictionary<char, VocabularyNode> childNodes { get; set; }
+        public static VocabularyNode Create(List<string> WordList)
+        {
+            VocabularyNode vn = new VocabularyNode();
+            vn.childNodes = new Dictionary<char, VocabularyNode>();
+            foreach (string s in WordList)
+            {
+                int i = 0;
+                LoopCreate( s , vn,  i);
+            }
+            return vn;
+        }
+        public static void LoopCreate(string s ,VocabularyNode vn, int i)
+        {
+            if (i < s.Length)
+            {
+                if (vn.childNodes.ContainsKey(s[i]))
+                {
+                    LoopCreate(s, vn.childNodes[s[i]], i + 1);
+                }
+                else
+                {
+                    vn.childNodes.Add(s[i], new VocabularyNode());
+                    vn.childNodes[s[i]].parentNode = vn;
+                    vn.childNodes[s[i]].childNodes = new Dictionary<char, VocabularyNode>();
+                    LoopCreate(s, vn.childNodes[s[i]], i + 1);
+                }
+            }
+        }
+    }
+    public class GrammarNode{
+        public Dictionary<char, GrammarNode> children { get; set; }
+    }
+    public class ASTNode
     {
         public int Offset { get; set; }
         public string Content { get; set; }
-        public BlockNode Parent { get; set; }
-        public List<BlockNode> Children { get; set; }
+        public ASTNode Parent { get; set; }
+        public List<ASTNode> Children { get; set; }
         public int Depth { get; set; }
-        public BlockNode()
+        public string type { get; set; }
+        public ASTNode()
         {
-            Children = new List<BlockNode>();
+            Children = new List<ASTNode>();
         }
     }
-    //public class PhpParser:Parser
-    //{
-    //    public override void Parse(string source, ref CodeTreeView outputTree)
-    //    {
-    //        base.Parse( source, ref  outputTree);
-    //    }
-
-    //}
 }
