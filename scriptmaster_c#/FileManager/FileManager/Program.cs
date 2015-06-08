@@ -29,9 +29,12 @@ namespace FileManager
             patterns.Add("colon", ":");
             patterns.Add("comma", ",");
             Scanner scanner = new Scanner(patterns, "{\"abc\":{ \'aas\':\'cd\',\'a\':\'c\'} }");
-            List<ASTNode> nodes = scanner.ScanAll();
+            List<ASTNode> nodes = scanner.ScanAll(); // With Sorted Order
 
            Console.WriteLine( nodes.Count);
+            foreach(ASTNode node in nodes){
+                Console.WriteLine(node.Offset);
+            }
 
             FileExplorerForm form = new FileExplorerForm();
 

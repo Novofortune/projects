@@ -240,7 +240,33 @@ namespace ScriptMaster
                     nodes.Add(node);
                 }
             }
+            nodes = Sort(nodes);
             return nodes;
+        }
+
+        private static List<ASTNode> Sort(List<ASTNode> nodes)
+        {
+            List<ASTNode> newnodes = new List<ASTNode>();
+            Dictionary<int, ASTNode> temp = new Dictionary<int, ASTNode>();
+
+            int maxindex = 0;
+            foreach (ASTNode node in nodes)
+            {
+                temp.Add(node.Offset,node);
+                if(node.Offset>maxindex){
+                    maxindex = node.Offset;
+                }
+            }
+            int i = 0;
+            while (i <= maxindex)
+            {
+                if (temp.ContainsKey(i))
+                {
+                    newnodes.Add(temp[i]);
+                }
+                i++;
+            }
+                return newnodes;
         }
     }
     public class Parser
