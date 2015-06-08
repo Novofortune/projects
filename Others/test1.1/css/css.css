@@ -1,0 +1,7 @@
+.logo {border-top-left-radius: 0px;top: 0;bottom: auto;left: 0;right: auto;}
+.title{margin-left:300px;}
+.header{ background-color:#ccccff;}
+.navbar{margin-right:300px; margin-left:auto;}
+.body{margin-left:200px;direction:ltr;margin-right:200px;}
+.body2{margin-left:100px; margin-top:200px;direction:ltr;margin-right:200px;}
+.item {background-color: #00728B;border: 1px solid #032472;color: #FFF;font-family: Arial;padding: 3px;text-decoration: none;}
