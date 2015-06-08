@@ -1,8 +1,8 @@
 <?php
 require("FileOperation.php");
 //tests
-$act=new ActionManager();
-print_r( $act->load("json/action.json"));
+//$act=new ActionManager();
+//print_r( $act->load("json/action.json"));
 
 class ActionManager
 {

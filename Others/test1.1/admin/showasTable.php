@@ -2,32 +2,40 @@
 include 'interface.DatabaseAdapter.php';
 include 'class.MySQLAdapter.php';
 
-
-function Transform($type, $db, $class)
+class show
 {
-	switch($type)
+	var $type = '';
+	var $db = '';
+	var $cla = '';
+	public function Transform()
 	{
-		case('table'):
-			return ReadTable($db ,$class);
-		case('line'):
-			return '';
-		default:
-			return null;
+		echo $this -> type."</br>";
+		switch($this -> type)
+		{
+			case('table'):
+				return ReadTable($this -> db ,$this -> cla);
+			case('line'):
+				return '';
+			default:
+				return null;
+		}
 	}
-	
 }
+
 
 function ReadTable($database,$class)
 {
 	$content = '';
-	if($class=='')
-	{
-		$content = $content.'<table>';
-	}
-	else
-	{
-		$content=$content.'<table class="'.$class.'">';
-	}
+	
+	$content.($class==""?'<table>':'<table class='.$class.'>');
+	//if($class=='')
+	//{
+	//	$content = $content.'<table>';
+	//}
+	//else
+	//{
+	//	$content=$content.'<table class="'.$class.'">';
+	//}
 	$content='';
 	$_config = array("localhost","root","","forum");
 

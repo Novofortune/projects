@@ -1,8 +1,49 @@
 
 
+
 {
-	"1":"users",
-	"2":"topics",
-	"3":"posts",
-	"4":"categories"
+	"1":
+	{
+		"class":"show",
+		"function":"Transform",
+		"parameter":
+		{
+			"type":"table",
+			"db":"users",
+			"cla":""
+		}
+	},
+	"2":
+	{
+		"class":"show",
+		"function":"Transform",
+		"parameter":
+		{
+			"type":"table",
+			"db":"users",
+			"cla":""
+		}
+	},
+	"3":
+	{
+		"class":"show",
+		"function":"Transform",
+		"parameter":
+		{
+			"type":"table",
+			"db":"users",
+			"cla":""
+		}
+	},
+	"4":
+	{
+		"class":"show",
+		"function":"Transform",
+		"parameter":
+		{
+			"type":"table",
+			"db":"users",
+			"cla":""
+		}
+	}
 }
