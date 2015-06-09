@@ -69,7 +69,6 @@
     </Compile>
     <Compile Include="ScriptMaster\FileOperation.cs" />
     <Compile Include="ScriptMaster\Parser.cs" />
-    <Compile Include="ScriptMaster\Program.cs" />
     <Compile Include="ScriptMaster\ScriptMasterForm.cs">
       <SubType>Form</SubType>
     </Compile>
