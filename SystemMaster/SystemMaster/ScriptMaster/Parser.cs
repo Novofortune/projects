@@ -63,30 +63,60 @@ namespace ScriptMaster
         {
             List<ASTNode> newnodes = new List<ASTNode>();
             Dictionary<int, ASTNode> temp = new Dictionary<int, ASTNode>();
+            Dictionary<ASTNode, int> temp1 = new Dictionary<ASTNode, int>(); // used to count each ASTNode character occurance in the end , if the count does not equal its content length, then it was cancelled
 
             int maxindex = 0;
             foreach (ASTNode node in nodes)
             {
-                temp.Add(node.Offset,node);
-                if(node.Offset>maxindex){
+                if (temp.ContainsKey(node.Offset))
+                {
+                    // Replace the existing node
+                    int length = node.Offset + node.Content.Length;
+                    for (int i = node.Offset; i < length; i++)
+                    {
+                        temp[i] = node;
+                    }
+                }
+                else
+                {
+                    int length = node.Offset+node.Content.Length;
+                    for (int i = node.Offset; i < length; i++)
+                    {
+                        temp.Add(i, node);
+                    }
+                }
+
+
+                if (node.Offset > maxindex)
+                {
                     maxindex = node.Offset;
                 }
             }
-            int i = 0;
-            while (i <= maxindex)
+            int ii = 0;
+            while (ii <= maxindex)
             {
-                if (temp.ContainsKey(i))
+                if (temp.ContainsKey(ii))
                 {
-                    newnodes.Add(temp[i]);
+                    if (temp1.ContainsKey(temp[ii]))
+                    {
+                        temp1[temp[ii]]++; // do the count
+                    }
+                    else
+                    {
+                        temp1.Add(temp[ii],1); // start the count
+                    }
                 }
-                i++;
+                ii++;
             }
-                return newnodes;
+
+            foreach (KeyValuePair<ASTNode, int> ASTNodeKVP in temp1) {
+                newnodes.Add(ASTNodeKVP.Key);
+            }
+            return newnodes;
         }
     }
     public class BlockParser
     {
-        public Scanner scanner { get;set;}
         public List<ASTNode> data { get; set; }
         public GrammarNode rules { get; set; }
         public int curpos { get; set; }
@@ -119,7 +149,14 @@ namespace ScriptMaster
         private void ParseBegin()
         {
             this.reset();
-            this.CurrentNode.Push(new ASTNode("root"));
+            //this.CurrentNode.Push(new ASTNode("root"));
+
+            ASTNode block = new ASTNode("block");
+            this.CurrentNode.Push(block); // push block
+
+            ASTNode sentence = new ASTNode("sentence");
+            this.CurrentNode.Push(sentence); // push sentence
+
             this.CurrentState.Push("^quote");
         }
         private ASTNode ParseEnd()
@@ -128,6 +165,7 @@ namespace ScriptMaster
             this.CurrentState.Pop();
             try
             {
+                this.ASTNodeBuilder.Add(this.CurrentNode.Pop());
                 return this.ASTNodeBuilder.Add(this.CurrentNode.Pop());
             }
             catch { return null; }
@@ -311,11 +349,25 @@ namespace ScriptMaster
                         catch { }
                             break;
                     }
+               
                 default:
                     {
                         break;
                     }
             }
+        }
+    }
+
+    public class BlockInterpretor
+    {
+        public ASTNode _ASTNode;
+        public BlockInterpretor(ASTNode _ASTNode)
+        {
+            this._ASTNode = _ASTNode;
+        }
+        public void Interpret()
+        {
+            for(int i=0;i<_ASTNode.)
         }
     }
     public class GrammarNode
@@ -410,6 +462,19 @@ namespace ScriptMaster
             {
                 ThisNode.Nodes.Add(child);
                 Visualize(child);
+            }
+        }
+
+        public static void OffsetAdjustToWinForm(ASTNode ThisNode,ref int backspaceCount)
+        {
+            ThisNode.Offset = ThisNode.Offset - backspaceCount;
+            if (ThisNode.type == "enter")
+            {
+                backspaceCount++;
+            }
+
+            for (int i = 0; i < ThisNode.Nodes.Count;i++ ) {
+                OffsetAdjustToWinForm(ThisNode.Nodes[i] as ASTNode,ref backspaceCount);
             }
         }
 

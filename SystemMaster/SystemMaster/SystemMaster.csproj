@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D2529FFC-52F7-4575-8AEE-97EB33EBFCE1}</ProjectGuid>
+    <ProjectGuid>{C0076200-29DF-4008-9B01-C2BBBF52D922}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ScriptMaster</RootNamespace>
-    <AssemblyName>ScriptMaster</AssemblyName>
+    <RootNamespace>SystemMaster</RootNamespace>
+    <AssemblyName>SystemMaster</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,18 +32,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Irony, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ca48ace7223ead47, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\Irony.dll</HintPath>
-    </Reference>
-    <Reference Include="Irony.Interpreter, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ca48ace7223ead47, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\Irony.Interpreter.dll</HintPath>
+    <Reference Include="Irony">
+      <HintPath>C:\Users\zhenrui\Documents\Visual Studio 2013\Projects\ScriptMaster\ScriptMaster\bin\Debug\Irony.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Input.Manipulations" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,31 +48,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeSegment.cs" />
-    <Compile Include="CodeTreeNode.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="FileOperation.cs" />
-    <Compile Include="ScriptMasterForm.cs">
+    <Compile Include="FileTreeNode.cs" />
+    <Compile Include="FileExplorerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ScriptMasterForm.Designer.cs">
-      <DependentUpon>ScriptMasterForm.cs</DependentUpon>
+    <Compile Include="FileExplorerForm.Designer.cs">
+      <DependentUpon>FileExplorerForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Grammars\minipython.cs" />
-    <Compile Include="Grammars\CSharpGrammar.cs" />
-    <Compile Include="Parser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringOperation.cs" />
+    <Compile Include="ScriptMaster\CodeSegment.cs" />
+    <Compile Include="ScriptMaster\CodeTreeNode.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ScriptMaster\FileOperation.cs" />
+    <Compile Include="ScriptMaster\Parser.cs" />
+    <Compile Include="ScriptMaster\ScriptMasterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScriptMaster\ScriptMasterForm.Designer.cs">
+      <DependentUpon>ScriptMasterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScriptMaster\StringOperation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ScriptMasterForm.resx">
+    <EmbeddedResource Include="FileExplorerForm.resx">
+      <DependentUpon>FileExplorerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScriptMaster\ScriptMasterForm.resx">
       <DependentUpon>ScriptMasterForm.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ScriptMaster\Grammars\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

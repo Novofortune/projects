@@ -28,12 +28,15 @@ namespace ScriptMaster
         public ScriptMasterForm()
         {
             InitializeComponent();
-            patterns = new Dictionary<string, string>();
+            patterns = new Dictionary<string, string>(); 
+            /*
+             * 按模式的顺序覆盖规则，后面的规则会覆盖前面的规则
+             */
             //patterns.Add("indentifier", "[A-Z|a-z|_][A-Z|a-z|0-9|_]*");
             //patterns.Add("digital", "[0-9]*");
-            patterns.Add("enter", "\\r\\n|\\r|\\n");
+            //patterns.Add("escape",@"\.");
+            patterns.Add("enter", @"\r\n|\r|\n");
             patterns.Add("space", @"(  *)");
-            patterns.Add("escape",@"\\");
             patterns.Add("other", @"([-+=<>@#$!%~`/\.\^\|\?\&\*])([-+=<>@#$!%~`/\.\^\|\?\&\*])*");
             patterns.Add("text", "[A-Z|a-z|0-9|_][A-Z|a-z|0-9|_]*");
             patterns.Add("openingbracket1", "{");
@@ -85,7 +88,7 @@ namespace ScriptMaster
             gn12.AddInstruction("quote", "asquote");
             GrammarNode.AddASTNodeSequence(gn, 0, gn12);
 
-            GrammarNode gn4 = new GrammarNode("comma");
+            GrammarNode gn4 = new GrammarNode("semicolon");
             gn4.AddInstruction("^quote", "split");
             gn4.AddInstruction("quote", "asquote");
             GrammarNode.AddASTNodeSequence(gn, 0, gn4);
@@ -100,18 +103,36 @@ namespace ScriptMaster
             gn7.AddInstruction("quote", "asquote");
             GrammarNode.AddASTNodeSequence(gn, 0, gn7);
 
+            GrammarNode gn14 = new GrammarNode("space");
+            gn14.AddInstruction("^quote", "normal");
+            gn14.AddInstruction("quote", "asquote");
+            GrammarNode.AddASTNodeSequence(gn, 0, gn14);
+
             GrammarNode gn8 = new GrammarNode("other");
             gn8.AddInstruction("^quote", "normal");
             gn8.AddInstruction("quote", "asquote");
             GrammarNode.AddASTNodeSequence(gn, 0, gn8);
+
+            GrammarNode gn13 = new GrammarNode("escape");
+            gn13.AddInstruction("^quote", "normal");
+            gn13.AddInstruction("quote", "asquote");
+            GrammarNode.AddASTNodeSequence(gn, 0, gn13);
         }
         public void parse_content()
         {
             scanner = new Scanner(patterns, content);
             List<ASTNode> nodes = scanner.ScanAll(); // With Sorted Order
+
+            foreach (ASTNode node in nodes)
+            {
+                Console.WriteLine(node.type+" "+node.Offset+" "+node.Content.Length);
+            }
+
             bp = new BlockParser(gn, nodes);
             ASTNode root = bp.Parse();
             ASTNode.Visualize(root);
+            int backspaceCount = 0;
+            ASTNode.OffsetAdjustToWinForm(root, ref backspaceCount);
             this.treeView1.Nodes.Clear();
             this.treeView1.Nodes.Add(root);
             this.treeView1.ExpandAll();
@@ -119,8 +140,10 @@ namespace ScriptMaster
             List<ASTNode> list = new List<ASTNode>();
             ASTNode.LoopRead(root, ref list);
             Console.WriteLine(list.Count);
+
+            //show labels
             RichTextBoxSelectionStart = this.richTextBox1.SelectionStart;
-            foreach (ASTNode node in nodes)
+            foreach (ASTNode node in list)
             {
                 switch (node.type)
                 {
@@ -156,6 +179,12 @@ namespace ScriptMaster
                             richTextBox1.SelectionColor = Color.Blue;
                             break;
                         }
+                    case "quote":
+                        {
+                            richTextBox1.Select(node.Offset, node.Content.Length);
+                            richTextBox1.SelectionColor = Color.Brown;
+                            break;
+                        }
                     case "space":
                         {
                             richTextBox1.Select(node.Offset, node.Content.Length);
@@ -165,13 +194,19 @@ namespace ScriptMaster
                     case "other":
                         {
                             richTextBox1.Select(node.Offset, node.Content.Length);
-                            richTextBox1.SelectionColor = Color.Red;
+                            richTextBox1.SelectionBackColor = Color.Red;
                             break;
                         }
-                    case "quote":
+                    case "escape":
                         {
                             richTextBox1.Select(node.Offset, node.Content.Length);
-                            richTextBox1.SelectionColor = Color.Brown;
+                            richTextBox1.SelectionBackColor = Color.Brown;
+                            break;
+                        }
+                    case "enter":
+                        {
+                           // richTextBox1.Select(node.Offset, node.Content.Length);
+                           // richTextBox1.SelectionBackColor = Color.Black;
                             break;
                         }
                 }
