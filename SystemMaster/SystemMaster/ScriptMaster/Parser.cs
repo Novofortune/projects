@@ -367,7 +367,7 @@ namespace ScriptMaster
         }
         public void Interpret()
         {
-            for(int i=0;i<_ASTNode.)
+            //for(int i=0;i<_ASTNode.)
         }
     }
     public class GrammarNode

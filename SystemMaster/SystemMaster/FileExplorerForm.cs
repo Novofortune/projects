@@ -20,10 +20,29 @@ namespace FileManager
         public  List<FileNode> fns;
         public FileTreeNode ftn;
         public List<FileTreeNode> ftns;
+        #region resize
+        int pathBoxOffset;
+        int fileCountOffset;
+        int filterOffset;
+        int createOffsetWidth;
+        int scriptOffsetWidth;
+        int Offset = 20;
+        int fileTreeOffsetWidth, fileTreeOffsetHeight;
+        #endregion
         //public FileTreeNode filter_ftn;
         public FileExplorerForm()
         {
             InitializeComponent();
+            //-----------------------------offset---------
+            pathBoxOffset = this.Width - PathBox.Width;
+            fileCountOffset = this.Width - FileCountBox.Width;
+            filterOffset = this.Width - FilterBox.Width;
+            createOffsetWidth = this.Width - createLabel.Width;
+            scriptOffsetWidth = this.Width - scriptLabel.Width;
+
+            fileTreeOffsetWidth = this.Width - fileTreeView.Width;
+            fileTreeOffsetHeight = this.Height - fileTreeView.Height;
+            //--------------------end offset---------------------
             //--------------------Events---------------------------------
             setEvents();
             //--------------------End Events---------------------------------
@@ -33,17 +52,17 @@ namespace FileManager
         public void firstloadTreeView()
         {
             this.ftns = new List<FileTreeNode>();
-            this.treeView1.Nodes.Clear();
-            this.curdir = this.textBox1.Text;
+            this.fileTreeView.Nodes.Clear();
+            this.curdir = this.PathBox.Text;
             this.fns = FileNode.GetFileTree(this.curdir);
 
             if (this.fns.Count > 0)
             {
                 this.ftns.Clear();
                 this.ftn = this.loadTreeView(this.fns[0], ref ftns);
-                this.treeView1.Nodes.Add(this.ftn);
-                this.treeView1.ExpandAll();
-                this.textBox2.Text = "File Count:" + ftns.Count.ToString();
+                this.fileTreeView.Nodes.Add(this.ftn);
+                this.fileTreeView.ExpandAll();
+                this.FileCountBox.Text = "File Count:" + ftns.Count.ToString();
             }
         }
         public FileTreeNode loadTreeView(FileNode fn, ref List<FileTreeNode> ftns)
@@ -66,27 +85,27 @@ namespace FileManager
         }
         public void setEvents()
         {
-            textBox1.KeyDown += textBox1_KeyDown;
+            PathBox.KeyDown += textBox1_KeyDown;
             //this.treeView1.NodeMouseClick += treeView1_NodeMouseClick;
-            this.treeView1.ItemDrag += treeView1_ItemDrag;
-            this.treeView1.DragDrop += treeView2_DragDrop;
-            this.treeView1.DragEnter += treeView2_DragEnter;
+            this.fileTreeView.ItemDrag += treeView1_ItemDrag;
+            this.fileTreeView.DragDrop += treeView2_DragDrop;
+            this.fileTreeView.DragEnter += treeView2_DragEnter;
 
-            this.label2.DragEnter += label2_DragEnter;
-            this.label2.DragDrop += label2_DragDrop;
-            this.label3.DragDrop += label3_DragDrop;
-            this.label3.DragEnter += label3_DragEnter;
-            this.textBox3.GotFocus += textBox3_GotFocus;
-            this.textBox3.LostFocus += textBox3_LostFocus;
-            this.textBox3.KeyDown += textBox3_KeyDown;
+            this.createLabel.DragEnter += label2_DragEnter;
+            this.createLabel.DragDrop += label2_DragDrop;
+            this.scriptLabel.DragDrop += label3_DragDrop;
+            this.scriptLabel.DragEnter += label3_DragEnter;
+            this.FilterBox.GotFocus += textBox3_GotFocus;
+            this.FilterBox.LostFocus += textBox3_LostFocus;
+            this.FilterBox.KeyDown += textBox3_KeyDown;
         }
 
         void textBox3_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                string ext = this.textBox3.Text;
-                this.curdir = this.textBox1.Text;
+                string ext = this.FilterBox.Text;
+                this.curdir = this.PathBox.Text;
                 this.fns = FileNode.GetFileTree(this.curdir);
 
                 this.ftns.Clear();
@@ -94,13 +113,13 @@ namespace FileManager
                 FileTreeNode NewTreeNode = loadTreeView(FileTreeNode.GetFilesByExtension(fns[0], ext), ref ftns);
                
                 //this.filter_ftn = NewTreeNode;
-                this.treeView1.Nodes.Clear();
+                this.fileTreeView.Nodes.Clear();
                 if (NewTreeNode != null)
                 {
-                    this.treeView1.Nodes.Add(NewTreeNode);
-                    this.treeView1.ExpandAll();
+                    this.fileTreeView.Nodes.Add(NewTreeNode);
+                    this.fileTreeView.ExpandAll();
                 }
-                this.textBox2.Text = "File Count:"+ftns.Count.ToString();
+                this.FileCountBox.Text = "File Count:"+ftns.Count.ToString();
             }
         }
 
@@ -112,7 +131,7 @@ namespace FileManager
 
         void textBox3_GotFocus(object sender, EventArgs e)
         {
-            this.textBox3.Text = "";
+            this.FilterBox.Text = "";
         }
 
         void label3_DragEnter(object sender, DragEventArgs e)
@@ -144,7 +163,7 @@ namespace FileManager
                 NewNode = (FileTreeNode)e.Data.GetData("FileManager.FileTreeNode");
                 FileExplorerForm form = new FileExplorerForm();
 
-                form.textBox1.Text = NewNode.fileNode.xpath;
+                form.PathBox.Text = NewNode.fileNode.xpath;
                 form.firstloadTreeView();
                 form.Show();
             }
@@ -191,7 +210,7 @@ namespace FileManager
 
         void treeView1_ItemDrag(object sender, ItemDragEventArgs e)
         {
-            this.treeView1.DoDragDrop(e.Item,DragDropEffects.Move);
+            this.fileTreeView.DoDragDrop(e.Item,DragDropEffects.Move);
             //Console.WriteLine(e.Item);
         }
 
@@ -226,7 +245,7 @@ namespace FileManager
         {
             firstloadTreeView();
         }
-        #endregion 
+        #endregion 吧
 
         private void exportTreeViewToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -321,11 +340,11 @@ namespace FileManager
                         BinaryFormatter bf = new BinaryFormatter();
                         this.fns[0] = bf.Deserialize(fileStream) as FileNode;
                         this.ftn = this.loadTreeView(this.fns[0],ref this.ftns);
-                        this.treeView1.Nodes.Clear();
-                        this.treeView1.Nodes.Add(ftn);
+                        this.fileTreeView.Nodes.Clear();
+                        this.fileTreeView.Nodes.Add(ftn);
                         this.curdir = fns[0].xpath;
-                        this.textBox1.Text = this.curdir;
-                        this.treeView1.ExpandAll();
+                        this.PathBox.Text = this.curdir;
+                        this.fileTreeView.ExpandAll();
                     }
                     fileStream.Close();
                 }
@@ -335,5 +354,30 @@ namespace FileManager
                 }
             }
         }
+
+        private void FileExplorerForm_Resize(object sender, EventArgs e)
+        {
+            PathBox.Width = this.Width - pathBoxOffset;
+            FileCountBox.Location = new Point(fileTreeView.Location.X+fileTreeView.Width+5, FileCountBox.Location.Y);
+            FileCountBox.Width = this.Width - fileCountOffset;
+            FilterBox.Width = this.Width - filterOffset;
+            createLabel.Width = this.Width - createOffsetWidth;
+            createLabel.Height = getNewboxheight();
+            scriptLabel.Location = new Point(createLabel.Location.X, createLabel.Location.Y + createLabel.Height);
+            scriptLabel.Width = this.Width - scriptOffsetWidth;
+            scriptLabel.Height = getNewboxheight();
+            fileTreeView.Width = this.Width - fileTreeOffsetWidth;
+            fileTreeView.Height = this.Height - fileTreeOffsetHeight;
+            formSize.Text = "(" + this.Width + "," + this.Height + ")" + "(" + fileTreeView.Width + "," + fileTreeView.Height + ")";
+            
+        }
+        private int getNewboxheight()
+        {
+            return this.Height / 3 - Offset;
+        }
+        private int getNeWidth()
+        {
+            return this.Width / 4 - Offset/8;
+        }   
     }
 }

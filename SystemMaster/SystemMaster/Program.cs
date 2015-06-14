@@ -24,7 +24,7 @@ namespace FileManager
 
             FileExplorerForm form = new FileExplorerForm();
 
-            form.textBox1.Text = Directory.GetCurrentDirectory();
+            form.PathBox.Text = Directory.GetCurrentDirectory();
             form.firstloadTreeView();
             form.Show();
 

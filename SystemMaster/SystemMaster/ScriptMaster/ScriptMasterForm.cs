@@ -128,7 +128,7 @@ namespace ScriptMaster
                 Console.WriteLine(node.type+" "+node.Offset+" "+node.Content.Length);
             }
 
-            bp = new BlockParser(gn, nodes);
+            bp = new BlockParser(gn, nodes);//识别括号引号
             ASTNode root = bp.Parse();
             ASTNode.Visualize(root);
             int backspaceCount = 0;
@@ -227,7 +227,6 @@ namespace ScriptMaster
                     this.Text = FilePath;
                     this.richTextBox1.Enabled = true;
                     this.content = reader.ReadToEnd();
-
                 }
                 fileStream.Close();
 
