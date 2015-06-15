@@ -61,7 +61,10 @@
             this.fileTreeView.Name = "fileTreeView";
             this.fileTreeView.Size = new System.Drawing.Size(287, 249);
             this.fileTreeView.TabIndex = 1;
+            this.fileTreeView.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.fileTreeView_BeforeCollapse);
+            this.fileTreeView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.fileTreeView_BeforeExpand);
             this.fileTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            this.fileTreeView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.fileTreeView_MouseDown);
             // 
             // label1
             // 
@@ -79,6 +82,7 @@
             this.createLabel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.createLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
             this.createLabel.Location = new System.Drawing.Point(308, 129);
+            this.createLabel.MaximumSize = new System.Drawing.Size(230, 130);
             this.createLabel.Name = "createLabel";
             this.createLabel.Size = new System.Drawing.Size(100, 89);
             this.createLabel.TabIndex = 6;
@@ -91,6 +95,7 @@
             this.scriptLabel.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.scriptLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
             this.scriptLabel.Location = new System.Drawing.Point(308, 218);
+            this.scriptLabel.MaximumSize = new System.Drawing.Size(230, 130);
             this.scriptLabel.Name = "scriptLabel";
             this.scriptLabel.Size = new System.Drawing.Size(100, 83);
             this.scriptLabel.TabIndex = 7;
@@ -101,6 +106,7 @@
             // 
             this.FileCountBox.Enabled = false;
             this.FileCountBox.Location = new System.Drawing.Point(308, 72);
+            this.FileCountBox.MaximumSize = new System.Drawing.Size(230, 21);
             this.FileCountBox.Name = "FileCountBox";
             this.FileCountBox.Size = new System.Drawing.Size(100, 21);
             this.FileCountBox.TabIndex = 8;
@@ -108,6 +114,7 @@
             // FilterBox
             // 
             this.FilterBox.Location = new System.Drawing.Point(308, 96);
+            this.FilterBox.MaximumSize = new System.Drawing.Size(230, 21);
             this.FilterBox.Name = "FilterBox";
             this.FilterBox.Size = new System.Drawing.Size(100, 21);
             this.FilterBox.TabIndex = 9;

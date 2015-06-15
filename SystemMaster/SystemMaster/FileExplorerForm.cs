@@ -29,6 +29,7 @@ namespace FileManager
         int Offset = 20;
         int fileTreeOffsetWidth, fileTreeOffsetHeight;
         #endregion
+        bool blnDoubleClick = false;
         //public FileTreeNode filter_ftn;
         public FileExplorerForm()
         {
@@ -86,19 +87,22 @@ namespace FileManager
         public void setEvents()
         {
             PathBox.KeyDown += textBox1_KeyDown;
-            //this.treeView1.NodeMouseClick += treeView1_NodeMouseClick;
             this.fileTreeView.ItemDrag += treeView1_ItemDrag;
             this.fileTreeView.DragDrop += treeView2_DragDrop;
             this.fileTreeView.DragEnter += treeView2_DragEnter;
+            this.fileTreeView.NodeMouseDoubleClick += fileTreeView_NodeMouseDoubleClick;
 
-            this.createLabel.DragEnter += label2_DragEnter;
-            this.createLabel.DragDrop += label2_DragDrop;
-            this.scriptLabel.DragDrop += label3_DragDrop;
-            this.scriptLabel.DragEnter += label3_DragEnter;
+            this.createLabel.DragEnter += createLabel_DragEnter;
+            this.createLabel.DragDrop += createLabel_DragDrop;
+            this.scriptLabel.DragDrop += scriptLabel_DragDrop;
+            this.scriptLabel.DragEnter += scrpitLabel_DragEnter;
             this.FilterBox.GotFocus += textBox3_GotFocus;
             this.FilterBox.LostFocus += textBox3_LostFocus;
             this.FilterBox.KeyDown += textBox3_KeyDown;
+            
         }
+
+      
 
         void textBox3_KeyDown(object sender, KeyEventArgs e)
         {
@@ -134,12 +138,12 @@ namespace FileManager
             this.FilterBox.Text = "";
         }
 
-        void label3_DragEnter(object sender, DragEventArgs e)
+        void scrpitLabel_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Move;
         }
 
-        void label3_DragDrop(object sender, DragEventArgs e)
+        void scriptLabel_DragDrop(object sender, DragEventArgs e)
         {
             FileTreeNode NewNode;
             if (e.Data.GetDataPresent("FileManager.FileTreeNode", false))
@@ -154,7 +158,7 @@ namespace FileManager
             }
         }
 
-        void label2_DragDrop(object sender, DragEventArgs e)
+        void createLabel_DragDrop(object sender, DragEventArgs e)
         {
             //Console.WriteLine("One time");
             FileTreeNode NewNode;
@@ -168,8 +172,46 @@ namespace FileManager
                 form.Show();
             }
         }
+          void fileTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+               FileTreeNode NewNode;
+               
+               NewNode = (FileTreeNode)e.Node;
+               if (File.Exists(NewNode.fileNode.xpath))
+               {
+                   ScriptMaster.ScriptMasterForm smf = new ScriptMaster.ScriptMasterForm();
+                   smf.load(NewNode.fileNode.xpath);
+                   smf.Show();
+               }
+               else
+               {
+                   FileExplorerForm form = new FileExplorerForm();
 
-        void label2_DragEnter(object sender, DragEventArgs e)
+                   form.PathBox.Text = NewNode.fileNode.xpath;
+                   form.firstloadTreeView();
+                   form.Show();
+               }
+           
+        }
+          private void fileTreeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
+          {
+              if (blnDoubleClick == true && e.Action == TreeViewAction.Collapse)
+                  e.Cancel = true;
+          }
+          private void fileTreeView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+          {
+              if (blnDoubleClick == true && e.Action == TreeViewAction.Expand)
+                  e.Cancel = true;
+          }
+
+          private void fileTreeView_MouseDown(object sender, MouseEventArgs e)
+          {
+              if (e.Clicks > 1)
+                  blnDoubleClick = true;
+              else
+                  blnDoubleClick = false;
+          }
+        void createLabel_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Move;
         }
@@ -177,7 +219,7 @@ namespace FileManager
         void treeView2_DragDrop(object sender, DragEventArgs e)
         {
             FileTreeNode NewNode;
-
+            
             if (e.Data.GetDataPresent("FileManager.FileTreeNode", false))
             {
                 Point pt = ((TreeView)sender).PointToClient(new Point(e.X, e.Y));
@@ -203,25 +245,22 @@ namespace FileManager
         {
             e.Effect = DragDropEffects.Move;
         }
-
-       
-
-        
-
         void treeView1_ItemDrag(object sender, ItemDragEventArgs e)
         {
             this.fileTreeView.DoDragDrop(e.Item,DragDropEffects.Move);
             //Console.WriteLine(e.Item);
         }
-
-        void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            //Console.WriteLine(e.Node);
-        }
+      
+        //void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        //{
+        //    //Console.WriteLine(e.Node);
+        //     FileTreeNode NewNode;
+         
+        //}
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-
+            
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -245,7 +284,7 @@ namespace FileManager
         {
             firstloadTreeView();
         }
-        #endregion 吧
+        #endregion 
 
         private void exportTreeViewToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -360,7 +399,9 @@ namespace FileManager
             PathBox.Width = this.Width - pathBoxOffset;
             FileCountBox.Location = new Point(fileTreeView.Location.X+fileTreeView.Width+5, FileCountBox.Location.Y);
             FileCountBox.Width = this.Width - fileCountOffset;
+            FilterBox.Location = new Point(FileCountBox.Location.X, FilterBox.Location.Y);
             FilterBox.Width = this.Width - filterOffset;
+            createLabel.Location = new Point(FileCountBox.Location.X, createLabel.Location.Y);
             createLabel.Width = this.Width - createOffsetWidth;
             createLabel.Height = getNewboxheight();
             scriptLabel.Location = new Point(createLabel.Location.X, createLabel.Location.Y + createLabel.Height);
@@ -369,15 +410,53 @@ namespace FileManager
             fileTreeView.Width = this.Width - fileTreeOffsetWidth;
             fileTreeView.Height = this.Height - fileTreeOffsetHeight;
             formSize.Text = "(" + this.Width + "," + this.Height + ")" + "(" + fileTreeView.Width + "," + fileTreeView.Height + ")";
-            
+
+            if (this.WindowState == FormWindowState.Maximized)
+            {
+                FileCountBox.Location = new Point(fileTreeView.Location.X + fileTreeView.Width + 5, FileCountBox.Location.Y);
+                FileCountBox.Width = this.Width - fileCountOffset;
+                FilterBox.Location = new Point(FileCountBox.Location.X, FilterBox.Location.Y);
+                FilterBox.Width = this.Width - filterOffset;
+                createLabel.Location = new Point(FileCountBox.Location.X, createLabel.Location.Y);
+                createLabel.Width = this.Width - createOffsetWidth;
+                createLabel.Height = getNewboxheight();
+                scriptLabel.Location = new Point(createLabel.Location.X, createLabel.Location.Y + createLabel.Height);
+                scriptLabel.Width = this.Width - scriptOffsetWidth;
+                scriptLabel.Height = getNewboxheight();
+                fileTreeView.Width = this.Width - fileTreeOffsetWidth;
+                fileTreeView.Height = this.Height - fileTreeOffsetHeight;
+            }
+            else if (this.WindowState == FormWindowState.Minimized)
+            {
+
+                FileCountBox.Location = new Point(308, FileCountBox.Location.Y);
+                FileCountBox.Width = this.Width - fileCountOffset;
+                FilterBox.Location = new Point(FileCountBox.Location.X, FilterBox.Location.Y);
+                FilterBox.Width = this.Width - filterOffset;
+                createLabel.Location = new Point(308, createLabel.Location.Y);
+                createLabel.Width = this.Width - createOffsetWidth;
+                createLabel.Height = getNewboxheight();
+                scriptLabel.Location = new Point(createLabel.Location.X, createLabel.Location.Y + createLabel.Height);
+                scriptLabel.Width = this.Width - scriptOffsetWidth;
+                scriptLabel.Height = getNewboxheight();
+                fileTreeView.Width = this.Width - fileTreeOffsetWidth;
+                fileTreeView.Height = this.Height - fileTreeOffsetHeight;
+            }
         }
         private int getNewboxheight()
         {
             return this.Height / 3 - Offset;
         }
-        private int getNeWidth()
-        {
-            return this.Width / 4 - Offset/8;
-        }   
+
+       
+
+       
+
+     
+
+        
+
+  
+   
     }
 }

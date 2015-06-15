@@ -131,8 +131,12 @@ namespace ScriptMaster
             bp = new BlockParser(gn, nodes);//识别括号引号
             ASTNode root = bp.Parse();
             ASTNode.Visualize(root);
+
+            //text box processing to prevent bug
             int backspaceCount = 0;
             ASTNode.OffsetAdjustToWinForm(root, ref backspaceCount);
+            //End text box processing to prevent bug 
+
             this.treeView1.Nodes.Clear();
             this.treeView1.Nodes.Add(root);
             this.treeView1.ExpandAll();
@@ -142,6 +146,7 @@ namespace ScriptMaster
             Console.WriteLine(list.Count);
 
             //show labels
+            #region Show TextBox----------------
             RichTextBoxSelectionStart = this.richTextBox1.SelectionStart;
             foreach (ASTNode node in list)
             {
@@ -213,6 +218,7 @@ namespace ScriptMaster
             }
             this.richTextBox1.SelectionStart = RichTextBoxSelectionStart;
             this.richTextBox1.ScrollToCaret();
+            #endregion
         }
         public void load(string FilePath)
         {
@@ -421,6 +427,7 @@ namespace ScriptMaster
                 }
             }
         }
-        
+
+      
     }
 }
