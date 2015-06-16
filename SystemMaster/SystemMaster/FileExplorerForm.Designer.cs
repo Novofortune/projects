@@ -42,14 +42,15 @@
             this.exportTreeViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importTreeViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.formSize = new System.Windows.Forms.Label();
+            this.btnBack = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // PathBox
             // 
-            this.PathBox.Location = new System.Drawing.Point(47, 32);
+            this.PathBox.Location = new System.Drawing.Point(119, 32);
             this.PathBox.Name = "PathBox";
-            this.PathBox.Size = new System.Drawing.Size(359, 21);
+            this.PathBox.Size = new System.Drawing.Size(289, 21);
             this.PathBox.TabIndex = 0;
             // 
             // fileTreeView
@@ -69,7 +70,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 35);
+            this.label1.Location = new System.Drawing.Point(84, 35);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(29, 12);
             this.label1.TabIndex = 4;
@@ -177,11 +178,22 @@
             this.formSize.TabIndex = 11;
             this.formSize.Text = "label2";
             // 
+            // btnBack
+            // 
+            this.btnBack.Location = new System.Drawing.Point(14, 30);
+            this.btnBack.Name = "btnBack";
+            this.btnBack.Size = new System.Drawing.Size(64, 23);
+            this.btnBack.TabIndex = 12;
+            this.btnBack.Text = "Back";
+            this.btnBack.UseVisualStyleBackColor = true;
+            this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
+            // 
             // FileExplorerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(424, 311);
+            this.Controls.Add(this.btnBack);
             this.Controls.Add(this.formSize);
             this.Controls.Add(this.FilterBox);
             this.Controls.Add(this.FileCountBox);
@@ -220,5 +232,6 @@
         private System.Windows.Forms.ToolStripMenuItem exportTreeViewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importTreeViewToolStripMenuItem;
         private System.Windows.Forms.Label formSize;
+        private System.Windows.Forms.Button btnBack;
     }
 }

@@ -269,7 +269,7 @@ namespace FileManager
             form.program_version = "ScriptMaster 1.0";
             form.CodeTreeViews = new List<ScriptMaster.CodeTreeView>();
             form.codeTreeView = new ScriptMaster.CodeTreeView();
-            form.CodeTreeViews.Add(form.treeView1); 
+            form.CodeTreeViews.Add(form.fileTreeView); 
             form.Show();
         }
 
@@ -280,10 +280,10 @@ namespace FileManager
                 firstloadTreeView();
             }
         }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            firstloadTreeView();
-        }
+        //private void button1_Click(object sender, EventArgs e)
+        //{
+        //    firstloadTreeView();
+        //}
         #endregion 
 
         private void exportTreeViewToolStripMenuItem_Click(object sender, EventArgs e)
@@ -446,6 +446,23 @@ namespace FileManager
         private int getNewboxheight()
         {
             return this.Height / 3 - Offset;
+        }
+
+        private void btnBack_Click(object sender, EventArgs e)
+        {
+            string tempPath;
+            int length;
+            int tempIndex = -1;
+            tempPath = PathBox.Text;
+            length=tempPath.Length;
+            tempIndex = tempPath.LastIndexOf('\\');
+            if (tempIndex > 0)
+            {
+                tempPath = tempPath.Substring(0, tempIndex);
+                PathBox.Text = tempPath;
+                firstloadTreeView();
+            }
+            
         }
 
        

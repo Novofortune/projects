@@ -25,6 +25,10 @@ namespace ScriptMaster
         public Scanner scanner;
         Dictionary<string, string> patterns;
         GrammarNode gn;
+        //
+        //disable double click expand
+        //
+        bool blnDoubleClick = false;
         public ScriptMasterForm()
         {
             InitializeComponent();
@@ -137,9 +141,9 @@ namespace ScriptMaster
             ASTNode.OffsetAdjustToWinForm(root, ref backspaceCount);
             //End text box processing to prevent bug 
 
-            this.treeView1.Nodes.Clear();
-            this.treeView1.Nodes.Add(root);
-            this.treeView1.ExpandAll();
+            this.fileTreeView.Nodes.Clear();
+            this.fileTreeView.Nodes.Add(root);
+            this.fileTreeView.ExpandAll();
 
             List<ASTNode> list = new List<ASTNode>();
             ASTNode.LoopRead(root, ref list);
@@ -239,7 +243,7 @@ namespace ScriptMaster
                 this.program_version = "ScriptMaster 1.0";
                 this.CodeTreeViews = new List<CodeTreeView>();
                 this.codeTreeView = new CodeTreeView();
-                this.CodeTreeViews.Add(this.treeView1);
+                this.CodeTreeViews.Add(this.fileTreeView);
                 this.setEvents();
                 this.Text = this.program_version;
                 this.richTextBox1.Text = this.content;
@@ -250,6 +254,7 @@ namespace ScriptMaster
                 catch { }
             }
         }
+     
         private void setEvents()
         {
             this.FormClosed += Form1_FormClosed;
@@ -428,6 +433,37 @@ namespace ScriptMaster
             }
         }
 
-      
+        private void fileTreeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
+        {
+            if (blnDoubleClick == true && e.Action == TreeViewAction.Collapse)
+                e.Cancel = true;
+        }
+
+        private void fileTreeView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            if (blnDoubleClick == true && e.Action == TreeViewAction.Expand)
+                e.Cancel = true;
+        }
+
+        private void fileTreeView_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Clicks > 1)
+                blnDoubleClick = true;
+            else
+                blnDoubleClick = false;
+        }
+
+        private void fileTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            ASTNode newNode;
+            newNode = (ASTNode)e.Node;
+            
+                //ScriptMaster.ScriptMasterForm smf = new ScriptMaster.ScriptMasterForm();
+                //smf.load(newNode.FullPath);
+                //smf.Show();
+            typeBox.Text = newNode.type;
+            contentBox.Text = newNode.Content;
+        }
+        
     }
 }

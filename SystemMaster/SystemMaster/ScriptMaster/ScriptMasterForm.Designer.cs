@@ -36,8 +36,10 @@
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.treeView1 = new ScriptMaster.CodeTreeView();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.fileTreeView = new ScriptMaster.CodeTreeView();
+            this.typeBox = new System.Windows.Forms.TextBox();
+            this.contentBox = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,7 +49,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(563, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(624, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
@@ -107,30 +109,52 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // treeView1
-            // 
-            this.treeView1.allNodes = null;
-            this.treeView1.CurrentNode = null;
-            this.treeView1.Location = new System.Drawing.Point(12, 26);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(358, 255);
-            this.treeView1.TabIndex = 4;
-            // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(376, 26);
+            this.richTextBox1.Location = new System.Drawing.Point(318, 24);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(175, 255);
+            this.richTextBox1.Size = new System.Drawing.Size(300, 255);
             this.richTextBox1.TabIndex = 5;
             this.richTextBox1.Text = "";
+            // 
+            // fileTreeView
+            // 
+            this.fileTreeView.allNodes = null;
+            this.fileTreeView.CurrentNode = null;
+            this.fileTreeView.Location = new System.Drawing.Point(12, 24);
+            this.fileTreeView.Name = "fileTreeView";
+            this.fileTreeView.Size = new System.Drawing.Size(300, 255);
+            this.fileTreeView.TabIndex = 4;
+            this.fileTreeView.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.fileTreeView_BeforeCollapse);
+            this.fileTreeView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.fileTreeView_BeforeExpand);
+            this.fileTreeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.fileTreeView_NodeMouseDoubleClick);
+            this.fileTreeView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.fileTreeView_MouseDown);
+            // 
+            // typeBox
+            // 
+            this.typeBox.Location = new System.Drawing.Point(12, 310);
+            this.typeBox.Multiline = true;
+            this.typeBox.Name = "typeBox";
+            this.typeBox.Size = new System.Drawing.Size(300, 45);
+            this.typeBox.TabIndex = 6;
+            // 
+            // contentBox
+            // 
+            this.contentBox.Location = new System.Drawing.Point(318, 310);
+            this.contentBox.Multiline = true;
+            this.contentBox.Name = "contentBox";
+            this.contentBox.Size = new System.Drawing.Size(300, 45);
+            this.contentBox.TabIndex = 7;
             // 
             // ScriptMasterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(563, 292);
+            this.ClientSize = new System.Drawing.Size(624, 367);
+            this.Controls.Add(this.contentBox);
+            this.Controls.Add(this.typeBox);
             this.Controls.Add(this.richTextBox1);
-            this.Controls.Add(this.treeView1);
+            this.Controls.Add(this.fileTreeView);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "ScriptMasterForm";
@@ -152,7 +176,9 @@
         private System.Windows.Forms.ToolStripMenuItem closeFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        public CodeTreeView treeView1;
+        public CodeTreeView fileTreeView;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.TextBox typeBox;
+        private System.Windows.Forms.TextBox contentBox;
     }
 }
