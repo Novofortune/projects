@@ -459,18 +459,155 @@ namespace ScriptMaster
         }
     }
 
-    public class BlockInterpretor
+    public class SentenceParser
     {
-        public ASTNode _ASTNode;
-        public BlockInterpretor(ASTNode _ASTNode)
+        public List<ASTNode> data { get; set; }
+        public GrammarNode rules { get; set; }
+        public int curpos { get; set; }
+        public ASTNodeBuilder ASTNodeBuilder { get; set; }
+        public Stack<ASTNode> CurrentNode { get; set; }
+        public Stack<string> CurrentState { get; set; }
+        public SentenceParser(GrammarNode rules, List<ASTNode> data)
         {
-            this._ASTNode = _ASTNode;
+            reset(rules, data);
         }
-        public void Interpret()
+        public void reset()
         {
-            //for(int i=0;i<_ASTNode.)
+            this.curpos = 0;
+            this.CurrentNode = new Stack<ASTNode>();
+            this.ASTNodeBuilder = new ASTNodeBuilder(this.CurrentNode);
+            this.CurrentState = new Stack<string>();
+        }
+        public void reset(GrammarNode rules, List<ASTNode> data)
+        {
+            this.rules = rules;
+            this.data = data;
+            reset();
+        }
+        public ASTNode Parse()
+        {
+            ParseBegin();
+            Parse(this.rules);
+            return ParseEnd();
+        }
+        private void ParseBegin()
+        {
+            this.reset();
+            //this.CurrentNode.Push(new ASTNode("root"));
+
+            ASTNode block = new ASTNode("block");
+            this.CurrentNode.Push(block); // push block
+
+            //ASTNode sentence = new ASTNode("sentence");
+            //this.CurrentNode.Push(sentence); // push sentence
+
+            this.CurrentState.Push("none");
+        }
+        private ASTNode ParseEnd()
+        {
+            this.curpos = 0;
+            this.CurrentState.Pop();
+            //try
+            //{
+                //this.ASTNodeBuilder.Add(this.CurrentNode.Pop());
+                return this.ASTNodeBuilder.Add(this.CurrentNode.Pop());
+            //}
+            //catch { return null; }
+        }
+        private void Parse(GrammarNode gn)
+        {
+            while (this.curpos < this.data.Count)
+            {
+                LoopInterpret(gn);
+            }
+        }
+        private void LoopInterpret(GrammarNode gn)
+        {
+            string key = this.data[this.curpos].type;
+            if (gn.childNodes.ContainsKey(key))
+            {
+                this.interpret(gn.childNodes[key].instructionrules); // perform instruction
+
+                if (gn.childNodes[key].childNodes.Count == 0) // Check Terminal
+                {
+                    this.curpos++;
+                }
+                else
+                {
+                    this.curpos++;
+                    LoopInterpret(gn.childNodes[key]); // perform instruction
+                }
+            }
+            else
+            {
+                this.curpos++;
+            }
+
+        }
+        private void interpret(Dictionary<string, string> instructionrules)
+        {
+            //Console.WriteLine(this.CurrentState.First());
+            string instruction = "";
+
+            if (instructionrules.ContainsKey(this.CurrentState.First()))
+            {
+                instruction = instructionrules[this.CurrentState.First()];
+            }
+            else
+            {
+
+            }
+
+            //Console.WriteLine(instruction);
+            switch (instruction)
+            {
+                case "pushsentence":
+                    {
+                        break;
+                    }
+                case "popsentence":
+                    {
+                        break;
+                    }
+                #region split
+                case "split":
+                    {
+                        
+                            this.ASTNodeBuilder.Add(this.CurrentNode.Pop());// pop sentence
+                            ASTNode sentence = new ASTNode("sentence");
+                            this.CurrentNode.Push(sentence);//push sentence
+                        
+                        break;
+                    }
+                #endregion
+                #region normal
+                case "normal":
+                    {
+                        this.CurrentNode.First().Children.Add(this.data[this.curpos]); // Add the normal node to the current structural node children
+
+                        break;
+                    }
+                #endregion
+                default:
+                    {
+                        break;
+                    }
+            }
+        }
+
+        public static List<ASTNode> ExpandBlock(ASTNode block) 
+        {
+            List<ASTNode> nodes = new List<ASTNode>();
+            if (block.Children != null) {
+                foreach (ASTNode node in block.Children)
+                {
+                    nodes.Add(node);
+                }
+            }
+            return nodes;
         }
     }
+
     public class GrammarNode
     {
         public string type { get; set; }
@@ -495,14 +632,39 @@ namespace ScriptMaster
                 this.parentNode = parent;
             }
         }
-        public static void AddASTNodeSequence( GrammarNode gn,int i= 0, params GrammarNode[] GrammarNodeSequence)
+        public static GrammarNode CreateGrammarNodeSequence(string state,string instruction, params string[] GrammarNodeTypeSequence)
+        {
+            List<GrammarNode> gns = new List<GrammarNode>();
+            GrammarNode gn = null;
+            for (int i = 0; i < GrammarNodeTypeSequence.Length;i++ )
+            {
+                if (i == 0) // if it is the first element
+                {
+                    gn = new GrammarNode(GrammarNodeTypeSequence[i]);
+                    gns.Add( gn);
+                }
+                else if (i == GrammarNodeTypeSequence.Length - 1) // if it is the last element, add state and instruction
+                {
+                    gn = new GrammarNode(GrammarNodeTypeSequence[i], gns[i - 1]); 
+                    gn.AddInstruction(state, instruction);
+                    gns.Add(gn);
+                }
+                else
+                {
+                    gn = new GrammarNode(GrammarNodeTypeSequence[i], gns[i-1]);
+                    gns.Add(  gn);
+                }
+            }
+            return gn;
+        }
+        public static void AddGrammarNodeSequence( GrammarNode gn,int i= 0, params GrammarNode[] GrammarNodeSequence)
         {
                 if (gn.childNodes.ContainsKey(GrammarNodeSequence[i].type))
                 {
                     i++;
                     while (i < GrammarNodeSequence.Length)
                     {
-                        AddASTNodeSequence(gn.childNodes[GrammarNodeSequence[i].type], i, GrammarNodeSequence);
+                        AddGrammarNodeSequence(gn.childNodes[GrammarNodeSequence[i].type], i, GrammarNodeSequence);
                     }
                 }
                 else
@@ -514,20 +676,16 @@ namespace ScriptMaster
                     while (i < GrammarNodeSequence.Length)
                     {
                         
-                        AddASTNodeSequence(gn.childNodes[GrammarNodeSequence[i].type], i, GrammarNodeSequence);
+                        AddGrammarNodeSequence(gn.childNodes[GrammarNodeSequence[i].type], i, GrammarNodeSequence);
                     }
                 }
             
            
         }
 
-        public  void AddState(string prestate, string state)
-        {
-            this.staterules.Add(prestate,state);
-        }
         public void AddInstruction(string state,string instruction)
         {
-            this.instructionrules.Add(state,instruction);
+                this.instructionrules.Add(state, instruction);
         }
     }
     public class ASTNode : TreeNode
@@ -598,6 +756,9 @@ namespace ScriptMaster
             return node;
         }
     }
-    
+    public class SemanticNode : ASTNode
+    {
+
+    }
 
 }

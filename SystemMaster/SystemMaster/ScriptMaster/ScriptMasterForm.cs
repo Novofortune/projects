@@ -20,9 +20,11 @@ namespace ScriptMaster
         public int RichTextBoxSelectionStart;
 
         public BlockParser bp;
+        public SentenceParser sp;
         public Scanner scanner;
         Dictionary<string, string> patterns;
-        GrammarNode gn;
+        GrammarNode BlockParseGrammar; //AST Parse Rule
+        GrammarNode SentenceParseGrammar; //Sentence Parse Rule
         //
         //disable double click expand
         //
@@ -30,6 +32,7 @@ namespace ScriptMaster
         public ScriptMasterForm()
         {
             InitializeComponent();
+            #region Tokenize Rule Set
             patterns = new Dictionary<string, string>(); 
             /*
              * 按模式的顺序覆盖规则，后面的规则会覆盖前面的规则
@@ -58,7 +61,10 @@ namespace ScriptMaster
             patterns.Add("comma", ",");
             //string json = FileOperation.ReadFromFile("PropertyInfo-771.json");
             //*******
-            gn = new GrammarNode("grammar");
+            #endregion
+
+            #region AST Parse Rule Set
+            BlockParseGrammar = new GrammarNode("grammar");
 
             GrammarNode gn15 = new GrammarNode("commentstart1");
             gn15.AddInstruction("none", "pushcomment1");
@@ -66,7 +72,7 @@ namespace ScriptMaster
             gn15.AddInstruction("comment2", "ascomment2");
             gn15.AddInstruction("quote1", "asquote1");
             gn15.AddInstruction("quote2", "asquote2");
-            GrammarNode.AddASTNodeSequence(gn, 0, gn15);
+            GrammarNode.AddGrammarNodeSequence(BlockParseGrammar, 0, gn15);
 
             GrammarNode gn17 = new GrammarNode("commentstart2");
             gn17.AddInstruction("none", "pushcomment2");
@@ -74,7 +80,7 @@ namespace ScriptMaster
             gn17.AddInstruction("comment2", "ascomment2");
             gn17.AddInstruction("quote1", "asquote1");
             gn17.AddInstruction("quote2", "asquote2");
-            GrammarNode.AddASTNodeSequence(gn, 0, gn17);
+            GrammarNode.AddGrammarNodeSequence(BlockParseGrammar, 0, gn17);
 
             GrammarNode gn16 = new GrammarNode("commentend2");
             gn16.AddInstruction("none", "normal");
@@ -82,7 +88,7 @@ namespace ScriptMaster
             gn16.AddInstruction("comment2", "popcomment2");
             gn16.AddInstruction("quote1", "asquote1");
             gn16.AddInstruction("quote2", "asquote2");
-            GrammarNode.AddASTNodeSequence(gn, 0, gn16);
+            GrammarNode.AddGrammarNodeSequence(BlockParseGrammar, 0, gn16);
 
 
             GrammarNode gn1 = new GrammarNode("quote1");
@@ -91,7 +97,7 @@ namespace ScriptMaster
             gn1.AddInstruction("quote2", "asquote2");
             gn1.AddInstruction("comment1", "ascomment1");
             gn1.AddInstruction("comment2", "ascomment2");
-            GrammarNode.AddASTNodeSequence(gn, 0, gn1);
+            GrammarNode.AddGrammarNodeSequence(BlockParseGrammar, 0, gn1);
 
             GrammarNode gn18 = new GrammarNode("quote2");
             gn18.AddInstruction("none", "pushquote2");
@@ -99,7 +105,7 @@ namespace ScriptMaster
             gn18.AddInstruction("quote1", "asquote1");
             gn18.AddInstruction("comment1", "ascomment1");
             gn18.AddInstruction("comment2", "ascomment2");
-            GrammarNode.AddASTNodeSequence(gn, 0, gn18);
+            GrammarNode.AddGrammarNodeSequence(BlockParseGrammar, 0, gn18);
 
             GrammarNode gn2 = new GrammarNode("openingbracket1");
             gn2.AddInstruction("none", "pushblock1");
@@ -107,7 +113,7 @@ namespace ScriptMaster
             gn2.AddInstruction("comment1", "ascomment1");
             gn2.AddInstruction("comment2", "ascomment2");
             gn2.AddInstruction("quote2", "asquote2");
-            GrammarNode.AddASTNodeSequence(gn, 0, gn2);
+            GrammarNode.AddGrammarNodeSequence(BlockParseGrammar, 0, gn2);
 
             GrammarNode gn3 = new GrammarNode("closingbracket1");
             gn3.AddInstruction("none", "popblock1");
@@ -115,7 +121,7 @@ namespace ScriptMaster
             gn3.AddInstruction("comment1", "ascomment1");
             gn3.AddInstruction("comment2", "ascomment2");
             gn3.AddInstruction("quote2", "asquote2");
-            GrammarNode.AddASTNodeSequence(gn, 0, gn3);
+            GrammarNode.AddGrammarNodeSequence(BlockParseGrammar, 0, gn3);
 
             GrammarNode gn9 = new GrammarNode("openingbracket2");
             gn9.AddInstruction("none", "pushblock2");
@@ -123,7 +129,7 @@ namespace ScriptMaster
             gn9.AddInstruction("comment1", "ascomment1");
             gn9.AddInstruction("comment2", "ascomment2");
             gn9.AddInstruction("quote2", "asquote2");
-            GrammarNode.AddASTNodeSequence(gn, 0, gn9);
+            GrammarNode.AddGrammarNodeSequence(BlockParseGrammar, 0, gn9);
 
             GrammarNode gn10 = new GrammarNode("closingbracket2");
             gn10.AddInstruction("none", "popblock2");
@@ -131,7 +137,7 @@ namespace ScriptMaster
             gn10.AddInstruction("comment1", "ascomment1");
             gn10.AddInstruction("comment2", "ascomment2");
             gn10.AddInstruction("quote2", "asquote2");
-            GrammarNode.AddASTNodeSequence(gn, 0, gn10);
+            GrammarNode.AddGrammarNodeSequence(BlockParseGrammar, 0, gn10);
 
             GrammarNode gn11 = new GrammarNode("openingbracket3");
             gn11.AddInstruction("none", "pushblock3");
@@ -139,7 +145,7 @@ namespace ScriptMaster
             gn11.AddInstruction("comment1", "ascomment1");
             gn11.AddInstruction("comment2", "ascomment2");
             gn11.AddInstruction("quote2", "asquote2");
-            GrammarNode.AddASTNodeSequence(gn, 0, gn11);
+            GrammarNode.AddGrammarNodeSequence(BlockParseGrammar, 0, gn11);
 
             GrammarNode gn12 = new GrammarNode("closingbracket3");
             gn12.AddInstruction("none", "popblock3");
@@ -147,7 +153,7 @@ namespace ScriptMaster
             gn12.AddInstruction("comment1", "ascomment1");
             gn12.AddInstruction("comment2", "ascomment2");
             gn12.AddInstruction("quote2", "asquote2");
-            GrammarNode.AddASTNodeSequence(gn, 0, gn12);
+            GrammarNode.AddGrammarNodeSequence(BlockParseGrammar, 0, gn12);
 
             GrammarNode gn4 = new GrammarNode("semicolon");
             gn4.AddInstruction("none", "split");
@@ -155,7 +161,7 @@ namespace ScriptMaster
             gn4.AddInstruction("comment1", "ascomment1");
             gn4.AddInstruction("comment2", "ascomment2");
             gn4.AddInstruction("quote2", "asquote2");
-            GrammarNode.AddASTNodeSequence(gn, 0, gn4);
+            GrammarNode.AddGrammarNodeSequence(BlockParseGrammar, 0, gn4);
 
             GrammarNode gn6 = new GrammarNode("text");
             gn6.AddInstruction("none", "normal");
@@ -163,7 +169,7 @@ namespace ScriptMaster
             gn6.AddInstruction("comment1", "ascomment1");
             gn6.AddInstruction("comment2", "ascomment2");
             gn6.AddInstruction("quote2", "asquote2");
-            GrammarNode.AddASTNodeSequence(gn, 0, gn6);
+            GrammarNode.AddGrammarNodeSequence(BlockParseGrammar, 0, gn6);
 
             //GrammarNode gn17 = new GrammarNode("keyword");
             //gn17.AddInstruction("none", "normal");
@@ -177,7 +183,7 @@ namespace ScriptMaster
             gn7.AddInstruction("comment1", "popcomment1"); // use enter as the end of a comment1
             gn7.AddInstruction("comment2", "ascomment2");
             gn7.AddInstruction("quote2", "asquote2");
-            GrammarNode.AddASTNodeSequence(gn, 0, gn7);
+            GrammarNode.AddGrammarNodeSequence(BlockParseGrammar, 0, gn7);
 
             GrammarNode gn14 = new GrammarNode("space");
             gn14.AddInstruction("none", "normal");
@@ -185,7 +191,7 @@ namespace ScriptMaster
             gn14.AddInstruction("comment1", "ascomment1");
             gn14.AddInstruction("comment2", "ascomment2");
             gn14.AddInstruction("quote2", "asquote2");
-            GrammarNode.AddASTNodeSequence(gn, 0, gn14);
+            GrammarNode.AddGrammarNodeSequence(BlockParseGrammar, 0, gn14);
 
             GrammarNode gn8 = new GrammarNode("other");
             gn8.AddInstruction("none", "normal");
@@ -193,7 +199,7 @@ namespace ScriptMaster
             gn8.AddInstruction("comment1", "ascomment1");
             gn8.AddInstruction("comment2", "ascomment2");
             gn8.AddInstruction("quote2", "asquote2");
-            GrammarNode.AddASTNodeSequence(gn, 0, gn8);
+            GrammarNode.AddGrammarNodeSequence(BlockParseGrammar, 0, gn8);
 
             GrammarNode gn13 = new GrammarNode("escape");
             gn13.AddInstruction("none", "normal");
@@ -201,7 +207,22 @@ namespace ScriptMaster
             gn13.AddInstruction("comment1", "ascomment1");
             gn13.AddInstruction("comment2", "ascomment2");
             gn13.AddInstruction("quote2", "asquote2");
-            GrammarNode.AddASTNodeSequence(gn, 0, gn13);
+            GrammarNode.AddGrammarNodeSequence(BlockParseGrammar, 0, gn13);
+
+            #endregion
+
+            #region Sentence Parse Rule Set
+
+            SentenceParseGrammar = new GrammarNode("grammar");
+
+
+            GrammarNode gn1001 = GrammarNode.CreateGrammarNodeSequence("none","defineclass","class", "identifier", "block1");
+            GrammarNode.AddGrammarNodeSequence(SentenceParseGrammar, 0, gn1001);
+
+            #endregion
+            #region Text ASTNode Interpret Rule
+
+            #endregion
         }
         public void parse_content()
         {
@@ -213,9 +234,13 @@ namespace ScriptMaster
                 Console.WriteLine(node.type+" "+node.Offset+" "+node.Content.Length);
             }
 
-            bp = new BlockParser(gn, nodes);//识别括号引号
+            bp = new BlockParser(BlockParseGrammar, nodes);//识别括号引号
             ASTNode root = bp.Parse();
+
             ASTNode.Visualize(root);
+            sp = new SentenceParser(SentenceParseGrammar, SentenceParser.ExpandBlock(root));
+            ASTNode root1 = sp.Parse();
+
 
             //text box processing to prevent bug
             int backspaceCount = 0;
