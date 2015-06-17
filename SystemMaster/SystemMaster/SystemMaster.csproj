@@ -54,10 +54,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScriptMaster\CodeSegment.cs" />
-    <Compile Include="ScriptMaster\CodeTreeNode.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="ScriptMaster\FileOperation.cs" />
     <Compile Include="ScriptMaster\Parser.cs" />
     <Compile Include="ScriptMaster\ScriptMasterForm.cs">

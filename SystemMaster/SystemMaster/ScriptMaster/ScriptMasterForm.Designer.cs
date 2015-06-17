@@ -37,7 +37,7 @@
             this.closeFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.fileTreeView = new ScriptMaster.CodeTreeView();
+            this.fileTreeView = new System.Windows.Forms.TreeView();
             this.typeBox = new System.Windows.Forms.TextBox();
             this.contentBox = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
@@ -119,8 +119,6 @@
             // 
             // fileTreeView
             // 
-            this.fileTreeView.allNodes = null;
-            this.fileTreeView.CurrentNode = null;
             this.fileTreeView.Location = new System.Drawing.Point(12, 24);
             this.fileTreeView.Name = "fileTreeView";
             this.fileTreeView.Size = new System.Drawing.Size(300, 255);
@@ -176,7 +174,7 @@
         private System.Windows.Forms.ToolStripMenuItem closeFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        public CodeTreeView fileTreeView;
+        public System.Windows.Forms.TreeView fileTreeView;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.TextBox typeBox;
         private System.Windows.Forms.TextBox contentBox;

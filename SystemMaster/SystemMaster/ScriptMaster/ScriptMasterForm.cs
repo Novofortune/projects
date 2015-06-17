@@ -17,8 +17,6 @@ namespace ScriptMaster
         public  string program_version;
         public  string file_path;
 
-        public  List<CodeTreeView> CodeTreeViews;
-        public  CodeTreeView codeTreeView;
         public int RichTextBoxSelectionStart;
 
         public BlockParser bp;
@@ -241,9 +239,6 @@ namespace ScriptMaster
                 fileStream.Close();
 
                 this.program_version = "ScriptMaster 1.0";
-                this.CodeTreeViews = new List<CodeTreeView>();
-                this.codeTreeView = new CodeTreeView();
-                this.CodeTreeViews.Add(this.fileTreeView);
                 this.setEvents();
                 this.Text = this.program_version;
                 this.richTextBox1.Text = this.content;

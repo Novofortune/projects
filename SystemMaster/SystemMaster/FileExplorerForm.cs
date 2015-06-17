@@ -38,8 +38,6 @@ namespace FileManager
             pathBoxOffset = this.Width - PathBox.Width;
             fileCountOffset = this.Width - FileCountBox.Width;
             filterOffset = this.Width - FilterBox.Width;
-            createOffsetWidth = this.Width - createLabel.Width;
-            scriptOffsetWidth = this.Width - scriptLabel.Width;
 
             fileTreeOffsetWidth = this.Width - fileTreeView.Width;
             fileTreeOffsetHeight = this.Height - fileTreeView.Height;
@@ -92,10 +90,6 @@ namespace FileManager
             this.fileTreeView.DragEnter += treeView2_DragEnter;
             this.fileTreeView.NodeMouseDoubleClick += fileTreeView_NodeMouseDoubleClick;
 
-            this.createLabel.DragEnter += createLabel_DragEnter;
-            this.createLabel.DragDrop += createLabel_DragDrop;
-            this.scriptLabel.DragDrop += scriptLabel_DragDrop;
-            this.scriptLabel.DragEnter += scrpitLabel_DragEnter;
             this.FilterBox.GotFocus += textBox3_GotFocus;
             this.FilterBox.LostFocus += textBox3_LostFocus;
             this.FilterBox.KeyDown += textBox3_KeyDown;
@@ -267,9 +261,6 @@ namespace FileManager
         {
             ScriptMaster.ScriptMasterForm form = new ScriptMaster.ScriptMasterForm();
             form.program_version = "ScriptMaster 1.0";
-            form.CodeTreeViews = new List<ScriptMaster.CodeTreeView>();
-            form.codeTreeView = new ScriptMaster.CodeTreeView();
-            form.CodeTreeViews.Add(form.fileTreeView); 
             form.Show();
         }
 
@@ -401,12 +392,6 @@ namespace FileManager
             FileCountBox.Width = this.Width - fileCountOffset;
             FilterBox.Location = new Point(FileCountBox.Location.X, FilterBox.Location.Y);
             FilterBox.Width = this.Width - filterOffset;
-            createLabel.Location = new Point(FileCountBox.Location.X, createLabel.Location.Y);
-            createLabel.Width = this.Width - createOffsetWidth;
-            createLabel.Height = getNewboxheight();
-            scriptLabel.Location = new Point(createLabel.Location.X, createLabel.Location.Y + createLabel.Height);
-            scriptLabel.Width = this.Width - scriptOffsetWidth;
-            scriptLabel.Height = getNewboxheight();
             fileTreeView.Width = this.Width - fileTreeOffsetWidth;
             fileTreeView.Height = this.Height - fileTreeOffsetHeight;
             formSize.Text = "(" + this.Width + "," + this.Height + ")" + "(" + fileTreeView.Width + "," + fileTreeView.Height + ")";
@@ -417,12 +402,6 @@ namespace FileManager
                 FileCountBox.Width = this.Width - fileCountOffset;
                 FilterBox.Location = new Point(FileCountBox.Location.X, FilterBox.Location.Y);
                 FilterBox.Width = this.Width - filterOffset;
-                createLabel.Location = new Point(FileCountBox.Location.X, createLabel.Location.Y);
-                createLabel.Width = this.Width - createOffsetWidth;
-                createLabel.Height = getNewboxheight();
-                scriptLabel.Location = new Point(createLabel.Location.X, createLabel.Location.Y + createLabel.Height);
-                scriptLabel.Width = this.Width - scriptOffsetWidth;
-                scriptLabel.Height = getNewboxheight();
                 fileTreeView.Width = this.Width - fileTreeOffsetWidth;
                 fileTreeView.Height = this.Height - fileTreeOffsetHeight;
             }
@@ -433,12 +412,6 @@ namespace FileManager
                 FileCountBox.Width = this.Width - fileCountOffset;
                 FilterBox.Location = new Point(FileCountBox.Location.X, FilterBox.Location.Y);
                 FilterBox.Width = this.Width - filterOffset;
-                createLabel.Location = new Point(308, createLabel.Location.Y);
-                createLabel.Width = this.Width - createOffsetWidth;
-                createLabel.Height = getNewboxheight();
-                scriptLabel.Location = new Point(createLabel.Location.X, createLabel.Location.Y + createLabel.Height);
-                scriptLabel.Width = this.Width - scriptOffsetWidth;
-                scriptLabel.Height = getNewboxheight();
                 fileTreeView.Width = this.Width - fileTreeOffsetWidth;
                 fileTreeView.Height = this.Height - fileTreeOffsetHeight;
             }
