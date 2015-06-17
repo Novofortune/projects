@@ -157,45 +157,48 @@ namespace ScriptMaster
             ASTNode sentence = new ASTNode("sentence");
             this.CurrentNode.Push(sentence); // push sentence
 
-            this.CurrentState.Push("^quote");
+            this.CurrentState.Push("none");
         }
         private ASTNode ParseEnd()
         {
             this.curpos = 0;
             this.CurrentState.Pop();
-            try
+            //try
             {
                 this.ASTNodeBuilder.Add(this.CurrentNode.Pop());
                 return this.ASTNodeBuilder.Add(this.CurrentNode.Pop());
             }
-            catch { return null; }
+            //catch { return null; }
         }
         private void Parse(GrammarNode gn)
         {
             while (this.curpos < this.data.Count)
             {
-                string key = this.data[this.curpos].type;
-                if (gn.childNodes.ContainsKey(key))
+                LoopInterpret(gn);
+            }
+        }
+        private void LoopInterpret(GrammarNode gn)
+        {
+            string key = this.data[this.curpos].type;
+            if (gn.childNodes.ContainsKey(key))
+            {
+                this.interpret(gn.childNodes[key].instructionrules); // perform instruction
+                
+                if (gn.childNodes[key].childNodes.Count == 0) // Check Terminal
                 {
-                    this.interpret(gn.childNodes[key].instructionrules); // perform instruction
-                    //this.updatestate(gn.childNodes[key].staterules); // update state \r\n
-                    if (gn.childNodes[key].childNodes.Count == 0) // Check Terminal
-                    {
-                        this.curpos++;
-                        Parse(this.rules);
-                    }
-                    else
-                    {
-                        this.curpos++;
-                        Parse(gn.childNodes[key]);
-                    }
+                    this.curpos++;
                 }
                 else
                 {
                     this.curpos++;
-                    Parse(this.rules);
+                    LoopInterpret(gn.childNodes[key]); // perform instruction
                 }
             }
+            else
+            {
+                this.curpos++;
+            }
+
         }
         private void interpret(Dictionary<string,string> instructionrules)
         {
@@ -218,44 +221,139 @@ namespace ScriptMaster
                     {
                         break;
                     }
-                case "pushquote":
+                #region comment1
+                case "pushcomment1":
                     {
-                        try
+                        ASTNode quote = new ASTNode();
+                        quote.type = "comment1";
+                        //this.CurrentNode.First().Children.Add(quote);
+                        this.CurrentNode.Push(quote); // push quote
+                        this.CurrentNode.First().Offset = this.data[this.curpos].Offset;
+                        this.CurrentNode.First().Content = this.data[this.curpos].Content;
+                        this.CurrentState.Push("comment1");
+                        break;
+                    } 
+                case "ascomment1":
+                    {
+                       
+                            this.CurrentNode.First().Content += this.data[this.curpos].Content; // Append content only
+                       
+                        break;
+                    }
+                case "popcomment1":
+                    {
+                            this.CurrentNode.First().Content += this.data[this.curpos].Content; // Append content
+                            this.ASTNodeBuilder.Add(this.CurrentNode.Pop()); // pop quote
+                            this.CurrentState.Pop();
+                        break;
+                    }
+                #endregion
+                #region comment2
+                case "pushcomment2":
+                    {
+                        ASTNode quote = new ASTNode();
+                        quote.type = "comment2";
+                        //this.CurrentNode.First().Children.Add(quote);
+                        this.CurrentNode.Push(quote); // push quote
+                        this.CurrentNode.First().Offset = this.data[this.curpos].Offset;
+                        this.CurrentNode.First().Content = this.data[this.curpos].Content;
+                        this.CurrentState.Push("comment2");
+                        break;
+                    } 
+                case "ascomment2":
+                    {
+                       
+                            this.CurrentNode.First().Content += this.data[this.curpos].Content; // Append content only
+                       
+                        break;
+                    }
+                case "popcomment2":
+                    {
+                            this.CurrentNode.First().Content += this.data[this.curpos].Content; // Append content
+                            this.ASTNodeBuilder.Add(this.CurrentNode.Pop()); // pop quote
+                            this.CurrentState.Pop();
+                        break;
+                    }
+                #endregion
+                #region quote1
+                case "pushquote1":
+                    {
+                     //   try
                         {
                             ASTNode quote = new ASTNode();
-                            quote.type = "quote";
+                            quote.type = "quote1";
                             //this.CurrentNode.First().Children.Add(quote);
                             this.CurrentNode.Push(quote); // push quote
                             this.CurrentNode.First().Offset = this.data[this.curpos].Offset;
                             this.CurrentNode.First().Content = this.data[this.curpos].Content;
-                            this.CurrentState.Push("quote");
+                            this.CurrentState.Push("quote1");
                         }
-                        catch { }
+                      //  catch { }
                         break;
                     }
-                case "asquote":
+                case "asquote1":
                     {
-                        try
+                       // try
                         {
                             this.CurrentNode.First().Content += this.data[this.curpos].Content; // Append content only
                         }
-                        catch { }
+                       // catch { }
                         break;
                     }
-                case "popquote":
+                case "popquote1":
                     {
-                        try
+                      //  try
                         {
                             this.CurrentNode.First().Content += this.data[this.curpos].Content; // Append content
                             this.ASTNodeBuilder.Add(this.CurrentNode.Pop()); // pop quote
                             this.CurrentState.Pop();
                         }
-                        catch { }
+                      //  catch { }
                         break;
                     }
+                #endregion 
+                    
+                #region quote2
+                case "pushquote2":
+                    {
+                        //   try
+                        {
+                            ASTNode quote = new ASTNode();
+                            quote.type = "quote2";
+                            //this.CurrentNode.First().Children.Add(quote);
+                            this.CurrentNode.Push(quote); // push quote
+                            this.CurrentNode.First().Offset = this.data[this.curpos].Offset;
+                            this.CurrentNode.First().Content = this.data[this.curpos].Content;
+                            this.CurrentState.Push("quote2");
+                        }
+                        //  catch { }
+                        break;
+                    }
+                case "asquote2":
+                    {
+                        // try
+                        {
+                            this.CurrentNode.First().Content += this.data[this.curpos].Content; // Append content only
+                        }
+                        // catch { }
+                        break;
+                    }
+                case "popquote2":
+                    {
+                        //  try
+                        {
+                            this.CurrentNode.First().Content += this.data[this.curpos].Content; // Append content
+                            this.ASTNodeBuilder.Add(this.CurrentNode.Pop()); // pop quote
+                            this.CurrentState.Pop();
+                        }
+                        //  catch { }
+                        break;
+                    }
+                #endregion 
+                #region block1
                 case "pushblock1":
                     {
-                        try
+                       // try
                         {
                             ASTNode block = new ASTNode("block");
                             //this.CurrentNode.First().Children.Add(block);
@@ -265,22 +363,24 @@ namespace ScriptMaster
                             //this.CurrentNode.First().Children.Add(sentence);
                             this.CurrentNode.Push(sentence); // push sentence
                         }
-                        catch { }
+                       // catch { }
                         break;
                     }
                 case "popblock1":
                     {
-                        try
+                       // try
                         {
                             this.ASTNodeBuilder.Add(this.CurrentNode.Pop());// pop sentence
                             this.ASTNodeBuilder.Add(this.CurrentNode.Pop());// pop block
                         }
-                        catch { }
+                       // catch { }
                         break;
                     }
+                #endregion
+                #region block2
                 case "pushblock2":
                     {
-                        try
+                       // try
                         {
                             ASTNode block = new ASTNode("block");
                             //this.CurrentNode.First().Children.Add(block);
@@ -290,22 +390,24 @@ namespace ScriptMaster
                             //this.CurrentNode.First().Children.Add(sentence);
                             this.CurrentNode.Push(sentence); // push sentence
                         }
-                        catch { }
+                       // catch { }
                         break;
                     }
                 case "popblock2":
                     {
-                        try
+                       // try
                         {
                             this.ASTNodeBuilder.Add(this.CurrentNode.Pop());// pop sentence
                             this.ASTNodeBuilder.Add(this.CurrentNode.Pop());// pop block
                         }
-                        catch { }
+                      //  catch { }
                         break;
                     }
+                #endregion
+                #region block3
                 case "pushblock3":
                     {
-                        try
+                       // try
                         {
                             ASTNode block = new ASTNode("block");
                             //this.CurrentNode.First().Children.Add(block);
@@ -315,41 +417,40 @@ namespace ScriptMaster
                             //this.CurrentNode.First().Children.Add(sentence);
                             this.CurrentNode.Push(sentence); // push sentence
                         }
-                        catch { }
+                       // catch { }
                         break;
                     }
                 case "popblock3":
                     {
-                        try
+                        //try
                         {
                             this.ASTNodeBuilder.Add(this.CurrentNode.Pop());// pop sentence
                             this.ASTNodeBuilder.Add(this.CurrentNode.Pop());// pop block
                         }
-                        catch { }
+                       // catch { }
                         break;
                     }
+                #endregion
+                #region split
                 case "split":
                     {
-                        try
                         {
                             this.ASTNodeBuilder.Add(this.CurrentNode.Pop());// pop sentence
                             ASTNode sentence = new ASTNode("sentence");
                             //this.CurrentNode.First().Children.Add(sentence);
                             this.CurrentNode.Push(sentence);//push sentence
                         }
-                        catch { }
                         break;
                     }
+                #endregion
+                #region normal
                 case "normal":
                     {
-                        try
-                        {
                             this.CurrentNode.First().Children.Add(this.data[this.curpos]); // Add the normal node to the current structural node children
-                        }
-                        catch { }
+                        
                             break;
                     }
-               
+                #endregion
                 default:
                     {
                         break;

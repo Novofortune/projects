@@ -41,83 +41,166 @@ namespace ScriptMaster
             patterns.Add("space", @"(  *)");
             patterns.Add("other", @"([-+=<>@#$!%~`/\.\^\|\?\&\*])([-+=<>@#$!%~`/\.\^\|\?\&\*])*");
             patterns.Add("text", "[A-Z|a-z|0-9|_][A-Z|a-z|0-9|_]*");
+            //patterns.Add("keyword", "using|System");
             patterns.Add("openingbracket1", "{");
             patterns.Add("closingbracket1", "}");
             patterns.Add("openingbracket2", "[[]");
             patterns.Add("closingbracket2", "[]]");
             patterns.Add("openingbracket3", "[(]");
             patterns.Add("closingbracket3", "[)]");
+            patterns.Add("commentstart1", "//");
+            patterns.Add("commentstart2", @"/\*");
+            patterns.Add("commentend2", @"\*/");
             patterns.Add("quote1", "\"");
             patterns.Add("quote2", "\'");
             patterns.Add("colon", ":");
             patterns.Add("semicolon", ";");
             patterns.Add("comma", ",");
             //string json = FileOperation.ReadFromFile("PropertyInfo-771.json");
-            
+            //*******
             gn = new GrammarNode("grammar");
+
+            GrammarNode gn15 = new GrammarNode("commentstart1");
+            gn15.AddInstruction("none", "pushcomment1");
+            gn15.AddInstruction("comment1", "ascomment1");
+            gn15.AddInstruction("comment2", "ascomment2");
+            gn15.AddInstruction("quote1", "asquote1");
+            gn15.AddInstruction("quote2", "asquote2");
+            GrammarNode.AddASTNodeSequence(gn, 0, gn15);
+
+            GrammarNode gn17 = new GrammarNode("commentstart2");
+            gn17.AddInstruction("none", "pushcomment2");
+            gn17.AddInstruction("comment1", "ascomment1");
+            gn17.AddInstruction("comment2", "ascomment2");
+            gn17.AddInstruction("quote1", "asquote1");
+            gn17.AddInstruction("quote2", "asquote2");
+            GrammarNode.AddASTNodeSequence(gn, 0, gn17);
+
+            GrammarNode gn16 = new GrammarNode("commentend2");
+            gn16.AddInstruction("none", "normal");
+            gn16.AddInstruction("comment1", "ascomment1");
+            gn16.AddInstruction("comment2", "popcomment2");
+            gn16.AddInstruction("quote1", "asquote1");
+            gn16.AddInstruction("quote2", "asquote2");
+            GrammarNode.AddASTNodeSequence(gn, 0, gn16);
+
+
             GrammarNode gn1 = new GrammarNode("quote1");
-            gn1.AddInstruction("^quote", "pushquote");
-            gn1.AddInstruction("quote", "popquote");
+            gn1.AddInstruction("none", "pushquote1");
+            gn1.AddInstruction("quote1", "popquote1");
+            gn1.AddInstruction("quote2", "asquote2");
+            gn1.AddInstruction("comment1", "ascomment1");
+            gn1.AddInstruction("comment2", "ascomment2");
             GrammarNode.AddASTNodeSequence(gn, 0, gn1);
 
+            GrammarNode gn18 = new GrammarNode("quote2");
+            gn18.AddInstruction("none", "pushquote2");
+            gn18.AddInstruction("quote2", "popquote2");
+            gn18.AddInstruction("quote1", "asquote1");
+            gn18.AddInstruction("comment1", "ascomment1");
+            gn18.AddInstruction("comment2", "ascomment2");
+            GrammarNode.AddASTNodeSequence(gn, 0, gn18);
+
             GrammarNode gn2 = new GrammarNode("openingbracket1");
-            gn2.AddInstruction("^quote", "pushblock1");
-            gn2.AddInstruction("quote", "asquote");
+            gn2.AddInstruction("none", "pushblock1");
+            gn2.AddInstruction("quote1", "asquote1");
+            gn2.AddInstruction("comment1", "ascomment1");
+            gn2.AddInstruction("comment2", "ascomment2");
+            gn2.AddInstruction("quote2", "asquote2");
             GrammarNode.AddASTNodeSequence(gn, 0, gn2);
 
             GrammarNode gn3 = new GrammarNode("closingbracket1");
-            gn3.AddInstruction("^quote", "popblock1");
-            gn3.AddInstruction("quote", "asquote");
+            gn3.AddInstruction("none", "popblock1");
+            gn3.AddInstruction("quote1", "asquote1");
+            gn3.AddInstruction("comment1", "ascomment1");
+            gn3.AddInstruction("comment2", "ascomment2");
+            gn3.AddInstruction("quote2", "asquote2");
             GrammarNode.AddASTNodeSequence(gn, 0, gn3);
 
             GrammarNode gn9 = new GrammarNode("openingbracket2");
-            gn9.AddInstruction("^quote", "pushblock2");
-            gn9.AddInstruction("quote", "asquote");
+            gn9.AddInstruction("none", "pushblock2");
+            gn9.AddInstruction("quote1", "asquote1");
+            gn9.AddInstruction("comment1", "ascomment1");
+            gn9.AddInstruction("comment2", "ascomment2");
+            gn9.AddInstruction("quote2", "asquote2");
             GrammarNode.AddASTNodeSequence(gn, 0, gn9);
 
             GrammarNode gn10 = new GrammarNode("closingbracket2");
-            gn10.AddInstruction("^quote", "popblock2");
-            gn10.AddInstruction("quote", "asquote");
+            gn10.AddInstruction("none", "popblock2");
+            gn10.AddInstruction("quote1", "asquote1");
+            gn10.AddInstruction("comment1", "ascomment1");
+            gn10.AddInstruction("comment2", "ascomment2");
+            gn10.AddInstruction("quote2", "asquote2");
             GrammarNode.AddASTNodeSequence(gn, 0, gn10);
 
             GrammarNode gn11 = new GrammarNode("openingbracket3");
-            gn11.AddInstruction("^quote", "pushblock3");
-            gn11.AddInstruction("quote", "asquote");
+            gn11.AddInstruction("none", "pushblock3");
+            gn11.AddInstruction("quote1", "asquote1");
+            gn11.AddInstruction("comment1", "ascomment1");
+            gn11.AddInstruction("comment2", "ascomment2");
+            gn11.AddInstruction("quote2", "asquote2");
             GrammarNode.AddASTNodeSequence(gn, 0, gn11);
 
             GrammarNode gn12 = new GrammarNode("closingbracket3");
-            gn12.AddInstruction("^quote", "popblock3");
-            gn12.AddInstruction("quote", "asquote");
+            gn12.AddInstruction("none", "popblock3");
+            gn12.AddInstruction("quote1", "asquote1");
+            gn12.AddInstruction("comment1", "ascomment1");
+            gn12.AddInstruction("comment2", "ascomment2");
+            gn12.AddInstruction("quote2", "asquote2");
             GrammarNode.AddASTNodeSequence(gn, 0, gn12);
 
             GrammarNode gn4 = new GrammarNode("semicolon");
-            gn4.AddInstruction("^quote", "split");
-            gn4.AddInstruction("quote", "asquote");
+            gn4.AddInstruction("none", "split");
+            gn4.AddInstruction("quote1", "asquote1");
+            gn4.AddInstruction("comment1", "ascomment1");
+            gn4.AddInstruction("comment2", "ascomment2");
+            gn4.AddInstruction("quote2", "asquote2");
             GrammarNode.AddASTNodeSequence(gn, 0, gn4);
 
             GrammarNode gn6 = new GrammarNode("text");
-            gn6.AddInstruction("^quote", "normal");
-            gn6.AddInstruction("quote", "asquote");
+            gn6.AddInstruction("none", "normal");
+            gn6.AddInstruction("quote1", "asquote1");
+            gn6.AddInstruction("comment1", "ascomment1");
+            gn6.AddInstruction("comment2", "ascomment2");
+            gn6.AddInstruction("quote2", "asquote2");
             GrammarNode.AddASTNodeSequence(gn, 0, gn6);
 
+            //GrammarNode gn17 = new GrammarNode("keyword");
+            //gn17.AddInstruction("none", "normal");
+            //gn17.AddInstruction("quote1", "asquote1");
+            //gn17.AddInstruction("comment1", "ascomment1");
+            //GrammarNode.AddASTNodeSequence(gn, 0, gn17);
+
             GrammarNode gn7 = new GrammarNode("enter");
-            gn7.AddInstruction("^quote", "normal");
-            gn7.AddInstruction("quote", "asquote");
+            gn7.AddInstruction("none", "normal");
+            gn7.AddInstruction("quote1", "asquote1");
+            gn7.AddInstruction("comment1", "popcomment1"); // use enter as the end of a comment1
+            gn7.AddInstruction("comment2", "ascomment2");
+            gn7.AddInstruction("quote2", "asquote2");
             GrammarNode.AddASTNodeSequence(gn, 0, gn7);
 
             GrammarNode gn14 = new GrammarNode("space");
-            gn14.AddInstruction("^quote", "normal");
-            gn14.AddInstruction("quote", "asquote");
+            gn14.AddInstruction("none", "normal");
+            gn14.AddInstruction("quote1", "asquote1");
+            gn14.AddInstruction("comment1", "ascomment1");
+            gn14.AddInstruction("comment2", "ascomment2");
+            gn14.AddInstruction("quote2", "asquote2");
             GrammarNode.AddASTNodeSequence(gn, 0, gn14);
 
             GrammarNode gn8 = new GrammarNode("other");
-            gn8.AddInstruction("^quote", "normal");
-            gn8.AddInstruction("quote", "asquote");
+            gn8.AddInstruction("none", "normal");
+            gn8.AddInstruction("quote1", "asquote1");
+            gn8.AddInstruction("comment1", "ascomment1");
+            gn8.AddInstruction("comment2", "ascomment2");
+            gn8.AddInstruction("quote2", "asquote2");
             GrammarNode.AddASTNodeSequence(gn, 0, gn8);
 
             GrammarNode gn13 = new GrammarNode("escape");
-            gn13.AddInstruction("^quote", "normal");
-            gn13.AddInstruction("quote", "asquote");
+            gn13.AddInstruction("none", "normal");
+            gn13.AddInstruction("quote1", "asquote1");
+            gn13.AddInstruction("comment1", "ascomment1");
+            gn13.AddInstruction("comment2", "ascomment2");
+            gn13.AddInstruction("quote2", "asquote2");
             GrammarNode.AddASTNodeSequence(gn, 0, gn13);
         }
         public void parse_content()
@@ -149,77 +232,77 @@ namespace ScriptMaster
 
             //show labels
             #region Show TextBox----------------
-            RichTextBoxSelectionStart = this.richTextBox1.SelectionStart;
-            foreach (ASTNode node in list)
-            {
-                switch (node.type)
-                {
-                    case "openingbracket1":
-                        {
-                            richTextBox1.Select(node.Offset, node.Content.Length);
-                            richTextBox1.SelectionColor = Color.Red;
-                            break;
-                        }
-                    case "closingbracket1":
-                        {
-                            richTextBox1.Select(node.Offset, node.Content.Length);
-                            richTextBox1.SelectionColor = Color.Red;
-                            break;
-                        }
+            //RichTextBoxSelectionStart = this.richTextBox1.SelectionStart;
+            //foreach (ASTNode node in nodes)
+            //{
+            //    switch (node.type)
+            //    {
+            //        case "openingbracket1":
+            //            {
+            //                richTextBox1.Select(node.Offset, node.Content.Length);
+            //                richTextBox1.SelectionColor = Color.Red;
+            //                break;
+            //            }
+            //        case "closingbracket1":
+            //            {
+            //                richTextBox1.Select(node.Offset, node.Content.Length);
+            //                richTextBox1.SelectionColor = Color.Red;
+            //                break;
+            //            }
 
-                    case "openingbracket2":
-                        {
-                            richTextBox1.Select(node.Offset, node.Content.Length);
-                            richTextBox1.SelectionColor = Color.Green;
-                            break;
-                        }
-                    case "closingbracket2":
-                        {
-                            richTextBox1.Select(node.Offset, node.Content.Length);
-                            richTextBox1.SelectionColor = Color.Green;
-                            break;
-                        }
+            //        case "openingbracket2":
+            //            {
+            //                richTextBox1.Select(node.Offset, node.Content.Length);
+            //                richTextBox1.SelectionColor = Color.Green;
+            //                break;
+            //            }
+            //        case "closingbracket2":
+            //            {
+            //                richTextBox1.Select(node.Offset, node.Content.Length);
+            //                richTextBox1.SelectionColor = Color.Green;
+            //                break;
+            //            }
 
-                    case "text":
-                        {
-                            richTextBox1.Select(node.Offset, node.Content.Length);
-                            richTextBox1.SelectionColor = Color.Blue;
-                            break;
-                        }
-                    case "quote":
-                        {
-                            richTextBox1.Select(node.Offset, node.Content.Length);
-                            richTextBox1.SelectionColor = Color.Brown;
-                            break;
-                        }
-                    case "space":
-                        {
-                            richTextBox1.Select(node.Offset, node.Content.Length);
-                            richTextBox1.SelectionBackColor = Color.Blue;
-                            break;
-                        }
-                    case "other":
-                        {
-                            richTextBox1.Select(node.Offset, node.Content.Length);
-                            richTextBox1.SelectionBackColor = Color.Red;
-                            break;
-                        }
-                    case "escape":
-                        {
-                            richTextBox1.Select(node.Offset, node.Content.Length);
-                            richTextBox1.SelectionBackColor = Color.Brown;
-                            break;
-                        }
-                    case "enter":
-                        {
-                           // richTextBox1.Select(node.Offset, node.Content.Length);
-                           // richTextBox1.SelectionBackColor = Color.Black;
-                            break;
-                        }
-                }
-            }
-            this.richTextBox1.SelectionStart = RichTextBoxSelectionStart;
-            this.richTextBox1.ScrollToCaret();
+            //        case "text":
+            //            {
+            //                richTextBox1.Select(node.Offset, node.Content.Length);
+            //                richTextBox1.SelectionColor = Color.Blue;
+            //                break;
+            //            }
+            //        case "quote":
+            //            {
+            //                richTextBox1.Select(node.Offset, node.Content.Length);
+            //                richTextBox1.SelectionColor = Color.Brown;
+            //                break;
+            //            }
+            //        case "space":
+            //            {
+            //                richTextBox1.Select(node.Offset, node.Content.Length);
+            //                richTextBox1.SelectionBackColor = Color.Blue;
+            //                break;
+            //            }
+            //        case "other":
+            //            {
+            //                richTextBox1.Select(node.Offset, node.Content.Length);
+            //                richTextBox1.SelectionBackColor = Color.Red;
+            //                break;
+            //            }
+            //        case "escape":
+            //            {
+            //                richTextBox1.Select(node.Offset, node.Content.Length);
+            //                richTextBox1.SelectionBackColor = Color.Brown;
+            //                break;
+            //            }
+            //        case "enter":
+            //            {
+            //               // richTextBox1.Select(node.Offset, node.Content.Length);
+            //               // richTextBox1.SelectionBackColor = Color.Black;
+            //                break;
+            //            }
+            //    }
+            //}
+            //this.richTextBox1.SelectionStart = RichTextBoxSelectionStart;
+            //this.richTextBox1.ScrollToCaret();
             #endregion
         }
         public void load(string FilePath)
@@ -242,11 +325,7 @@ namespace ScriptMaster
                 this.setEvents();
                 this.Text = this.program_version;
                 this.richTextBox1.Text = this.content;
-                try
-                {
                     parse_content();
-                }
-                catch { }
             }
         }
      
