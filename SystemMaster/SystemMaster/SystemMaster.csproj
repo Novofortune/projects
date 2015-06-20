@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C0076200-29DF-4008-9B01-C2BBBF52D922}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SystemMaster</RootNamespace>
+    <AssemblyName>SystemMaster</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Input.Manipulations" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FileTreeNode.cs" />
+    <Compile Include="FileExplorerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FileExplorerForm.Designer.cs">
+      <DependentUpon>FileExplorerForm.cs</DependentUpon>
+    </Compile>
+<<<<<<< HEAD:scriptmaster_c#/FileManager/FileManager/FileManager.csproj
+    <Compile Include="PHPTesting\phpTestingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PHPTesting\phpTestingForm.Designer.cs">
+      <DependentUpon>phpTestingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TreeViewStorageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TreeViewStorageForm.Designer.cs">
+      <DependentUpon>TreeViewStorageForm.cs</DependentUpon>
+    </Compile>
+=======
+>>>>>>> origin/master:SystemMaster/SystemMaster/SystemMaster.csproj
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScriptMaster\FileOperation.cs" />
+    <Compile Include="ScriptMaster\Parser.cs" />
+    <Compile Include="ScriptMaster\ScriptMasterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScriptMaster\ScriptMasterForm.Designer.cs">
+      <DependentUpon>ScriptMasterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScriptMaster\StringOperation.cs" />
+    <Compile Include="SystemPlanner\SystemPlanner.cs" />
+    <Compile Include="SystemPlanner\SystemPlannerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SystemPlanner\SystemPlannerForm.Designer.cs">
+      <DependentUpon>SystemPlannerForm.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FileExplorerForm.resx">
+      <DependentUpon>FileExplorerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PHPTesting\phpTestingForm.resx">
+      <DependentUpon>phpTestingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScriptMaster\ScriptMasterForm.resx">
+      <DependentUpon>ScriptMasterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SystemPlanner\SystemPlannerForm.resx">
+      <DependentUpon>SystemPlannerForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ScriptMaster\Grammars\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
