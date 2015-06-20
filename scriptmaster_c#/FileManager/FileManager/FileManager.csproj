@@ -55,6 +55,12 @@
     <Compile Include="FileExplorerForm.Designer.cs">
       <DependentUpon>FileExplorerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PHPTesting\phpTestingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PHPTesting\phpTestingForm.Designer.cs">
+      <DependentUpon>phpTestingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TreeViewStorageForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,6 +89,9 @@
   <ItemGroup>
     <EmbeddedResource Include="FileExplorerForm.resx">
       <DependentUpon>FileExplorerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PHPTesting\phpTestingForm.resx">
+      <DependentUpon>phpTestingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ScriptMaster\ScriptMasterForm.resx">
       <DependentUpon>ScriptMasterForm.cs</DependentUpon>

@@ -159,7 +159,7 @@ namespace ScriptMaster
                 }
             }
         }
-        private void interpret(Dictionary<string,string> instructionrules)
+        private void interpret(Dictionary<string,string> instructionrules)///generate a ASTree structure based on grammar rules
         {
             //Console.WriteLine(this.CurrentState.First());
             string instruction = "";

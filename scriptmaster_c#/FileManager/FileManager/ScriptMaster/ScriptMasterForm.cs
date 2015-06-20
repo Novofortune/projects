@@ -47,31 +47,32 @@ namespace ScriptMaster
             patterns.Add("colon", ":");
             patterns.Add("semicolon", ";");
             patterns.Add("comma", ",");
+            //patterns.Add("rightarrow","->");
             //string json = FileOperation.ReadFromFile("PropertyInfo-771.json");
             
             gn = new GrammarNode("grammar");
-            GrammarNode gn1 = new GrammarNode("quote1");
+            GrammarNode gn1 = new GrammarNode("quote1"); //recognize info: find content in the pair of quotes
             gn1.AddInstruction("^quote", "pushquote");
             gn1.AddInstruction("quote", "popquote");
             GrammarNode.AddASTNodeSequence(gn, 0, gn1);
 
             GrammarNode gn2 = new GrammarNode("openingbracket1");
-            gn2.AddInstruction("^quote", "pushblock1");
+            gn2.AddInstruction("^quote", "pushblock1"); //-> 
             gn2.AddInstruction("quote", "asquote");
             GrammarNode.AddASTNodeSequence(gn, 0, gn2);
 
             GrammarNode gn3 = new GrammarNode("closingbracket1");
-            gn3.AddInstruction("^quote", "popblock1");
+            gn3.AddInstruction("^quote", "popblock1"); //<- 
             gn3.AddInstruction("quote", "asquote");
             GrammarNode.AddASTNodeSequence(gn, 0, gn3);
 
             GrammarNode gn9 = new GrammarNode("openingbracket2");
-            gn9.AddInstruction("^quote", "pushblock2");
+            gn9.AddInstruction("^quote", "pushblock2");//->
             gn9.AddInstruction("quote", "asquote");
             GrammarNode.AddASTNodeSequence(gn, 0, gn9);
 
             GrammarNode gn10 = new GrammarNode("closingbracket2");
-            gn10.AddInstruction("^quote", "popblock2");
+            gn10.AddInstruction("^quote", "popblock2");//<-
             gn10.AddInstruction("quote", "asquote");
             GrammarNode.AddASTNodeSequence(gn, 0, gn10);
 
@@ -104,6 +105,11 @@ namespace ScriptMaster
             gn8.AddInstruction("^quote", "normal");
             gn8.AddInstruction("quote", "asquote");
             GrammarNode.AddASTNodeSequence(gn, 0, gn8);
+
+            //GrammarNode gn100 = new GrammarNode("rightarrow");
+            //gn100.AddInstruction("^quote", "normal");
+            //gn100.AddInstruction("quote", "normal");
+            //GrammarNode.AddASTNodeSequence(gn, 0, gn100);
         }
         public void parse_content()
         {
