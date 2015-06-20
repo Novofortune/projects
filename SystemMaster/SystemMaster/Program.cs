@@ -15,25 +15,22 @@ namespace FileManager
     class Program
     {
         public static bool running;
-        //public static string cmd;
         [STAThread]
         static void Main(string[] args)
         {
-            //testing
-         
-
             FileExplorerForm form = new FileExplorerForm();
-
             form.PathBox.Text = Directory.GetCurrentDirectory();
             form.firstloadTreeView();
-            form.Show();
+            //form.Show();
+            SystemMaster.SystemPlanner.SystemPlannerForm form1 = new SystemMaster.SystemPlanner.SystemPlannerForm();
+            form1.Show();
 
             running = true;
             while (running)
             {
-                Application.DoEvents();
+                System.Windows.Forms.Application.DoEvents();
+                System.Windows.Forms.Cursor.Current = form1.currentCursor;
                 Thread.Sleep(20);
-
                 ProgramExitCheck();
             }
         }
@@ -41,7 +38,7 @@ namespace FileManager
       
         static void ProgramExitCheck()
         {
-            if (Application.OpenForms.Count == 0) { running = false; };
+            if (System.Windows.Forms.Application.OpenForms.Count == 0) { running = false; };
         }
     }
 }
