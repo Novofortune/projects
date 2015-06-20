@@ -59,6 +59,7 @@
     <Compile Include="FileExplorerForm.Designer.cs">
       <DependentUpon>FileExplorerForm.cs</DependentUpon>
     </Compile>
+<<<<<<< HEAD:SystemMaster/SystemMaster/SystemMaster.csproj
 <<<<<<< HEAD:scriptmaster_c#/FileManager/FileManager/FileManager.csproj
     <Compile Include="PHPTesting\phpTestingForm.cs">
       <SubType>Form</SubType>
@@ -72,6 +73,8 @@
     <Compile Include="TreeViewStorageForm.Designer.cs">
       <DependentUpon>TreeViewStorageForm.cs</DependentUpon>
     </Compile>
+=======
+>>>>>>> origin/master:SystemMaster/SystemMaster/SystemMaster.csproj
 =======
 >>>>>>> origin/master:SystemMaster/SystemMaster/SystemMaster.csproj
     <Compile Include="Program.cs" />
